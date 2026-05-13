@@ -1,0 +1,3110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boeing 737 MAX — MDS Maintenance Awareness Training</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #101525;
+    --surface2: #161d32;
+    --border: rgba(0,200,255,0.15);
+    --accent: #00c8ff;
+    --accent2: #ff6b35;
+    --accent3: #00ff9d;
+    --text: #e8f4f8;
+    --muted: #7a9ab0;
+    --warning: #ffbe0b;
+    --danger: #ff4444;
+    --card-glow: 0 0 30px rgba(0,200,255,0.08);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--accent2); }
+  .header-badge {
+    background: rgba(255,107,53,0.15);
+    border: 1px solid rgba(255,107,53,0.4);
+    color: var(--accent2);
+    font-size: 0.65rem;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .progress-bar-wrap {
+    width: 120px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* ── Layout ── */
+  .app {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* ── Sidebar nav ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    overflow-y: auto;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+  }
+  .sidebar-section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 0.5rem 1.25rem 0.25rem;
+    margin-top: 0.5rem;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.25rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .nav-item:hover { background: rgba(0,200,255,0.05); color: var(--text); }
+  .nav-item.active {
+    border-left-color: var(--accent);
+    background: rgba(0,200,255,0.08);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .nav-item .nav-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    min-width: 1.5rem;
+  }
+  .nav-item.active .nav-num { color: var(--accent); }
+  .nav-item .nav-done {
+    margin-left: auto;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem;
+    transition: all 0.3s;
+  }
+  .nav-item.done .nav-done {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: #000;
+  }
+
+  /* ── Main content ── */
+  main { padding: 2rem 2.5rem; overflow-y: auto; }
+
+  /* ── Slide ── */
+  .slide { display: none; animation: slideIn 0.4s ease; }
+  .slide.active { display: block; }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Slide header ── */
+  .slide-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .slide-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 0.25rem;
+  }
+  .slide-subtitle {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+    font-weight: 300;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    box-shadow: var(--card-glow);
+  }
+  .card + .card { margin-top: 1rem; }
+
+  /* ── Two-col grid ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Info list ── */
+  .info-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: var(--text);
+  }
+  .info-row:last-child { border-bottom: none; }
+  .bullet {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .bullet.orange { background: var(--accent2); }
+  .bullet.green { background: var(--accent3); }
+
+  /* ── Display mock ── */
+  .display-mock {
+    background: #000;
+    border: 2px solid rgba(0,200,255,0.3);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .display-mock::before {
+    content: 'MAINT';
+    position: absolute;
+    top: 6px; right: 6px;
+    background: rgba(255,107,53,0.25);
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .display-hdr {
+    color: var(--accent);
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+  }
+  .hyd-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .hyd-table th {
+    color: var(--accent);
+    text-align: center;
+    padding: 2px 4px;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+  .hyd-table td {
+    text-align: center;
+    padding: 4px;
+    color: #fff;
+  }
+  .hyd-table td.warn { color: var(--warning); }
+  .hyd-table td.rf {
+    font-size: 0.6rem;
+    color: var(--warning);
+    vertical-align: super;
+  }
+
+  /* gear cells */
+  .gear-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0.75rem 0;
+    color: #fff;
+    font-size: 0.8rem;
+  }
+  .gear-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .gear-oval {
+    width: 32px; height: 52px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    color: #fff;
+  }
+  .gear-oval.warn { border-color: var(--warning); color: var(--warning); }
+  .gear-label { font-size: 0.6rem; color: var(--muted); }
+  .gear-val { font-size: 0.7rem; }
+
+  /* flight surfaces */
+  .surfaces-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-top: 0.75rem;
+    color: var(--accent);
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+  .surface-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .surface-bar {
+    width: 4px;
+    background: rgba(255,255,255,0.2);
+    position: relative;
+    border-radius: 2px;
+  }
+  .surface-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: height 0.8s ease;
+  }
+  .rudder-bar { height: 40px; }
+  .ail-bar { height: 56px; }
+  .elev-bar { height: 56px; }
+
+  /* ── Panel mock ── */
+  .panel-mock {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 1rem;
+  }
+  .panel-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .panel-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+  .panel-row { display: flex; gap: 4px; }
+  .mfd-btn {
+    background: #2a2a2a;
+    border: 1px solid #555;
+    color: #ccc;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .mfd-btn:hover { background: #3a3a3a; }
+  .mfd-btn.active-btn {
+    background: rgba(0,200,255,0.2);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .mfd-section-label {
+    font-size: 0.55rem;
+    color: #666;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-top: 4px;
+  }
+  .selector-knob {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #555, #222);
+    border: 2px solid #666;
+    display: flex; align-items: center; justify-content: center;
+    margin: 6px auto 0;
+    color: #aaa;
+    font-size: 0.6rem;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* ── Quiz ── */
+  .quiz-wrap {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .quiz-q {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-option {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+  .quiz-option:hover { border-color: rgba(0,200,255,0.4); background: rgba(0,200,255,0.05); }
+  .quiz-option.correct { border-color: var(--accent3); background: rgba(0,255,157,0.08); color: var(--accent3); }
+  .quiz-option.wrong { border-color: var(--danger); background: rgba(255,68,68,0.08); color: var(--danger); }
+  .quiz-option .opt-letter {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+  }
+  .quiz-feedback {
+    margin-top: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.good { background: rgba(0,255,157,0.1); border: 1px solid var(--accent3); color: var(--accent3); }
+  .quiz-feedback.bad { background: rgba(255,68,68,0.1); border: 1px solid var(--danger); color: #ff8a8a; }
+
+  /* ── Nav buttons ── */
+  .slide-nav {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    align-items: center;
+  }
+  .nav-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+  .nav-btn.primary:hover { background: #00aad9; border-color: #00aad9; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-counter {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* ── Callout box ── */
+  .callout {
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0;
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .callout.info { background: rgba(0,200,255,0.08); border-left: 3px solid var(--accent); }
+  .callout.warn { background: rgba(255,190,11,0.08); border-left: 3px solid var(--warning); }
+  .callout.tip  { background: rgba(0,255,157,0.08); border-left: 3px solid var(--accent3); }
+  .callout-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Step sequence ── */
+  .steps { display: flex; flex-direction: column; gap: 0; margin: 1rem 0; }
+  .step {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    animation: none;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(0,200,255,0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .step-content { font-size: 0.88rem; line-height: 1.5; }
+  .step-title { font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .step-desc { color: var(--muted); }
+
+  /* ── Diamond indicator ── */
+  .diamond-grid { display: flex; flex-direction: column; gap: 0.5rem; margin: 0.75rem 0; }
+  .diamond-item { display: flex; align-items: center; gap: 0.75rem; font-size: 0.88rem; }
+  .diamond {
+    width: 14px; height: 14px;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  .diamond.gray { background: #888; border: 1px solid #aaa; }
+  .diamond.cyan { background: transparent; border: 2px solid var(--accent); }
+
+  /* ── Switching diagram ── */
+  .switch-diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: center;
+    margin: 1rem 0;
+  }
+  .du-box {
+    background: #000;
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 6px;
+    min-height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-align: center;
+    padding: 0.5rem;
+    transition: all 0.5s;
+  }
+  .du-box.active-du { border-color: var(--accent3); color: var(--accent3); background: rgba(0,255,157,0.05); }
+  .du-box.blank-du { border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.15); }
+  .arrow-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .switch-arrow { color: var(--accent); font-size: 1.2rem; }
+  .switch-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  /* ── EI format mock ── */
+  .ei-mock {
+    background: #000;
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: #0f0;
+  }
+  .ei-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .ei-label { color: var(--muted); }
+  .ei-val { color: #0f0; }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 0; margin-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active-tab { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-content { display: none; }
+  .tab-content.active-tc { display: block; }
+
+  /* ── Animated scan line ── */
+  .scan-line {
+    position: relative;
+    overflow: hidden;
+  }
+  .scan-line::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan 3s linear infinite;
+    opacity: 0.4;
+  }
+  @keyframes scan {
+    from { top: -2px; }
+    to   { top: 100%; }
+  }
+
+  /* key-value stat card */
+  .stat-card {
+    background: rgba(0,200,255,0.05);
+    border: 1px solid rgba(0,200,255,0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.25rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* completion */
+  .completion-badge {
+    text-align: center;
+    padding: 2rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .completion-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  .completion-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent3);
+  }
+  .completion-sub { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+
+  /* toggle switch */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.75rem 0;
+    font-size: 0.88rem;
+  }
+  .toggle-switch {
+    position: relative; width: 44px; height: 22px;
+    background: #333; border-radius: 11px;
+    cursor: pointer; transition: background 0.3s; flex-shrink: 0;
+  }
+  .toggle-switch::after {
+    content: ''; position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: 50%; background: #888;
+    transition: all 0.3s;
+  }
+  .toggle-switch.on { background: rgba(0,200,255,0.3); }
+  .toggle-switch.on::after { left: 25px; background: var(--accent); }
+
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Boeing 737 <span>MAX</span></div>
+  <div class="header-badge">ATA 31-6x · MDS</div>
+  <div class="header-badge" style="background:rgba(0,255,157,0.1);border-color:rgba(0,255,157,0.4);color:var(--accent3)">Maintenance Awareness</div>
+  <div class="header-right">
+    <span id="prog-label">0 / 8</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+</header>
+
+<div class="app">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section-label">Module 1 — Systems Format</div>
+    <div class="nav-item active" data-slide="0" onclick="goSlide(0)">
+      <span class="nav-num">01</span>MDS Systems Format Overview
+      <span class="nav-done" id="nd-0">✓</span>
+    </div>
+    <div class="nav-item" data-slide="1" onclick="goSlide(1)">
+      <span class="nav-num">02</span>Systems Format Display
+      <span class="nav-done" id="nd-1">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 2 — INFO Format</div>
+    <div class="nav-item" data-slide="2" onclick="goSlide(2)">
+      <span class="nav-num">03</span>INFO Format Overview
+      <span class="nav-done" id="nd-2">✓</span>
+    </div>
+    <div class="nav-item" data-slide="3" onclick="goSlide(3)">
+      <span class="nav-num">04</span>N1/SPD REF SET Page
+      <span class="nav-done" id="nd-3">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 3 — Manual Reversion</div>
+    <div class="nav-item" data-slide="4" onclick="goSlide(4)">
+      <span class="nav-num">05</span>Display Switching Overview
+      <span class="nav-done" id="nd-4">✓</span>
+    </div>
+    <div class="nav-item" data-slide="5" onclick="goSlide(5)">
+      <span class="nav-num">06</span>NORM / OUTBD / INBD Modes
+      <span class="nav-done" id="nd-5">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 4 — Engine Switch</div>
+    <div class="nav-item" data-slide="6" onclick="goSlide(6)">
+      <span class="nav-num">07</span>ENG Switch — Display Switching
+      <span class="nav-done" id="nd-6">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 5 — Displays Source</div>
+    <div class="nav-item" data-slide="7" onclick="goSlide(7)">
+      <span class="nav-num">08</span>Displays-Source Switch
+      <span class="nav-done" id="nd-7">✓</span>
+    </div>
+    <div class="nav-item" data-slide="8" onclick="goSlide(8)">
+      <span class="nav-num">09</span>DPC Routing Table
+      <span class="nav-done" id="nd-8">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 6 — Control Panel</div>
+    <div class="nav-item" data-slide="9" onclick="goSlide(9)">
+      <span class="nav-num">10</span>Displays-Control Panel Switch
+      <span class="nav-done" id="nd-9">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 7 — PFD Messages</div>
+    <div class="nav-item" data-slide="10" onclick="goSlide(10)">
+      <span class="nav-num">11</span>PFD Status Messages
+      <span class="nav-done" id="nd-10">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 8 — MAS</div>
+    <div class="nav-item" data-slide="11" onclick="goSlide(11)">
+      <span class="nav-num">12</span>MAS Overview &amp; MAINT Light
+      <span class="nav-done" id="nd-11">✓</span>
+    </div>
+    <div class="nav-item" data-slide="12" onclick="goSlide(12)">
+      <span class="nav-num">13</span>Status Messages Page
+      <span class="nav-done" id="nd-12">✓</span>
+    </div>
+    <div class="nav-item" data-slide="13" onclick="goSlide(13)">
+      <span class="nav-num">14</span>Maintenance Data Pages
+      <span class="nav-done" id="nd-13">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Module 9 — Data Page Menus</div>
+    <div class="nav-item" data-slide="14" onclick="goSlide(14)">
+      <span class="nav-num">15</span>Main Menu Bar Selections
+      <span class="nav-done" id="nd-14">✓</span>
+    </div>
+    <div class="nav-item" data-slide="15" onclick="goSlide(15)">
+      <span class="nav-num">16</span>Display &amp; Print Menus
+      <span class="nav-done" id="nd-15">✓</span>
+    </div>
+    <div class="nav-item" data-slide="16" onclick="goSlide(16)">
+      <span class="nav-num">17</span>Datalink &amp; Erase Menus
+      <span class="nav-done" id="nd-16">✓</span>
+    </div>
+    <div class="nav-item" data-slide="17" onclick="goSlide(17)">
+      <span class="nav-num">18</span>Manual &amp; Auto Events
+      <span class="nav-done" id="nd-17">✓</span>
+    </div>
+    <div class="nav-item" data-slide="18" onclick="goSlide(18)">
+      <span class="nav-num">19</span>Air Conditioning Data Page
+      <span class="nav-done" id="nd-18">✓</span>
+    </div>
+    <div class="nav-item" data-slide="19" onclick="goSlide(19)">
+      <span class="nav-num">20</span>Flight Control &amp; SMYD Pages
+      <span class="nav-done" id="nd-19">✓</span>
+    </div>
+
+    <div class="sidebar-section-label">Assessment</div>
+    <div class="nav-item" data-slide="20" onclick="goSlide(20)">
+      <span class="nav-num">21</span>Knowledge Check
+      <span class="nav-done" id="nd-20">✓</span>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 0 — MDS Systems Format Overview
+    ═══════════════════════════════════════════════ -->
+    <div class="slide active" id="slide-0">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 1 of 21</div>
+      <div class="slide-title">MDS — Systems Format Overview</div>
+      <div class="slide-subtitle">How to access and what the Systems Format displays on the 737 MAX Multi-Function Display</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">How to Select</div>
+          <div class="info-row">
+            <div class="bullet"></div>
+            Use the <strong>MFD-SYS switch</strong> on the <strong>Multi-Function Panel (MFP)</strong> to select the Systems Format.
+          </div>
+          <div class="info-row">
+            <div class="bullet"></div>
+            The systems format can display on the <strong>inboard side</strong> of an <strong>outboard</strong> or <strong>inboard Display Unit (DU)</strong>.
+          </div>
+
+          <div class="info-label" style="margin-top:1rem">What Is Displayed</div>
+          <div class="info-row"><div class="bullet"></div>Hydraulic quantity</div>
+          <div class="info-row"><div class="bullet"></div>Hydraulic pressure</div>
+          <div class="info-row"><div class="bullet orange"></div>Tire pressure <em style="color:var(--muted)">(option)</em></div>
+          <div class="info-row"><div class="bullet orange"></div>Brake temperature <em style="color:var(--muted)">(option)</em></div>
+          <div class="info-row"><div class="bullet orange"></div>Flight control surface positions <em style="color:var(--muted)">(option)</em></div>
+        </div>
+
+        <div>
+          <div class="card panel-mock" style="margin-bottom:1rem">
+            <div class="panel-label">Multi-Function Panel (MFP)</div>
+            <div style="font-size:0.6rem;color:#666;text-align:center;font-family:'Share Tech Mono',monospace;margin-bottom:6px">─── MFD ───</div>
+            <div class="panel-btns">
+              <div class="panel-row">
+                <button class="mfd-btn">ENG</button>
+                <button class="mfd-btn active-btn" id="sys-btn" onclick="toggleSysBtn()">SYS ◀</button>
+              </div>
+              <div class="panel-row" style="margin-top:4px">
+                <button class="mfd-btn">INFO</button>
+                <button class="mfd-btn">C/R</button>
+              </div>
+              <div style="font-size:0.55rem;color:#666;letter-spacing:1px;text-align:center;margin-top:4px;font-family:'Share Tech Mono',monospace">─── ENG TFR ───</div>
+              <div class="panel-row" style="margin-top:2px">
+                <button class="mfd-btn">⇔</button>
+              </div>
+              <div style="font-size:0.55rem;color:#666;letter-spacing:1px;margin-top:6px;font-family:'Share Tech Mono',monospace;text-align:center">SELECTOR</div>
+              <div class="selector-knob">SEL</div>
+            </div>
+          </div>
+          <div class="callout info">
+            <span class="callout-icon">ℹ</span>
+            <span>Click <strong>SYS</strong> button above to see how it activates the systems format display.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()" id="prev-0" disabled>← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter" id="sc-0">Slide 1 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 1 — Systems Format Display
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-1">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 2 of 21</div>
+      <div class="slide-title">Systems Format — Display Indications</div>
+      <div class="slide-subtitle">Interactive mock-up of the MDS Systems Format screen as seen in normal operation</div>
+
+      <div class="two-col">
+        <div>
+          <div class="display-mock scan-line" id="sys-display">
+            <div class="display-hdr">HYDRAULIC</div>
+            <table class="hyd-table">
+              <tr>
+                <th></th>
+                <th>A</th>
+                <th>B</th>
+              </tr>
+              <tr>
+                <td style="color:var(--accent);font-size:0.65rem">QTY%</td>
+                <td>92</td>
+                <td>75 <span class="rf">RF</span></td>
+              </tr>
+              <tr>
+                <td style="color:var(--accent);font-size:0.65rem">PRESS</td>
+                <td>2800</td>
+                <td>3200</td>
+              </tr>
+            </table>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">
+              <span>L ─────</span>
+              <span>GEAR</span>
+              <span>───── R</span>
+            </div>
+
+            <div class="gear-row" id="gear-row">
+              <div class="gear-cell">
+                <div class="gear-val" style="color:var(--muted)">0.0</div>
+                <div class="gear-oval">185</div>
+                <div class="gear-label">NLG</div>
+              </div>
+              <div class="gear-cell">
+                <div class="gear-val warn" style="color:var(--warning)">5.1</div>
+                <div class="gear-oval warn">130</div>
+                <div class="gear-label">L-MLG</div>
+              </div>
+              <div class="gear-cell">
+                <div class="gear-val">2.5</div>
+                <div class="gear-oval">190</div>
+                <div class="gear-label">R-MLG</div>
+              </div>
+              <div class="gear-cell">
+                <div class="gear-val" style="color:var(--muted)">0.0</div>
+                <div class="gear-oval">210</div>
+                <div class="gear-label">R-O</div>
+              </div>
+            </div>
+
+            <div class="surfaces-row" id="surfaces-row">
+              <div class="surface-indicator">
+                <div style="color:#fff;font-size:0.7rem">FLT</div>
+                <div class="surface-bar ail-bar" style="height:56px"><div class="surface-fill" style="height:40%"></div></div>
+                <div>AIL</div>
+              </div>
+              <div class="surface-indicator">
+                <div style="color:#fff;font-size:0.7rem">SPLR</div>
+                <div class="surface-bar ail-bar" style="height:56px"><div class="surface-fill" style="height:55%"></div></div>
+                <div>FLT SPLR</div>
+              </div>
+              <div class="surface-indicator">
+                <div style="color:#fff;font-size:0.7rem"> </div>
+                <div class="surface-bar elev-bar" style="height:56px"><div class="surface-fill" style="height:50%"></div></div>
+                <div>ELEV</div>
+              </div>
+              <div class="surface-indicator">
+                <div style="color:#fff;font-size:0.7rem">SPLR</div>
+                <div class="surface-bar ail-bar" style="height:56px"><div class="surface-fill" style="height:30%"></div></div>
+                <div>FLT SPLR</div>
+              </div>
+              <div class="surface-indicator">
+                <div style="color:#fff;font-size:0.7rem"> </div>
+                <div class="surface-bar ail-bar" style="height:56px"><div class="surface-fill" style="height:45%"></div></div>
+                <div>AIL</div>
+              </div>
+            </div>
+
+            <div style="text-align:center;margin-top:0.75rem;">
+              <div class="surface-bar rudder-bar" style="height:30px;width:4px;display:inline-block;position:relative"><div class="surface-fill" style="height:60%;background:var(--accent)"></div></div>
+              <div style="color:var(--accent);font-size:0.6rem;letter-spacing:1px;margin-top:2px">RUDDER</div>
+            </div>
+          </div>
+
+          <div class="callout warn" style="margin-top:0.75rem">
+            <span class="callout-icon">⚠</span>
+            <span>The <span style="color:var(--warning)">yellow/amber</span> indications on gear brakes (130 psi, 5.1°C) indicate values approaching limits — always cross-check with maintenance limits.</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="info-label">Reading the Display</div>
+            <div class="tabs">
+              <div class="tab active-tab" onclick="switchTab(this,'hydraulic')">Hydraulic</div>
+              <div class="tab" onclick="switchTab(this,'gear')">Gear / Brakes</div>
+              <div class="tab" onclick="switchTab(this,'surfaces')">Surfaces</div>
+            </div>
+
+            <div class="tab-content active-tc" id="tc-hydraulic">
+              <div class="three-col" style="margin-bottom:0.75rem">
+                <div class="stat-card">
+                  <div class="stat-val">92</div>
+                  <div class="stat-label">Sys A QTY%</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-val" style="color:var(--warning)">75</div>
+                  <div class="stat-label">Sys B QTY%</div>
+                </div>
+                <div class="stat-card" style="background:rgba(255,190,11,0.05);border-color:rgba(255,190,11,0.2)">
+                  <div class="stat-val" style="color:var(--warning);font-size:1rem">RF</div>
+                  <div class="stat-label">Refill Flag</div>
+                </div>
+              </div>
+              <div class="info-row"><div class="bullet"></div><strong>QTY%</strong> — hydraulic fluid quantity as a percentage of full</div>
+              <div class="info-row"><div class="bullet"></div><strong>PRESS</strong> — system pressure in PSI (normal: 3000 PSI)</div>
+              <div class="info-row"><div class="bullet orange"></div><strong>RF</strong> flag on Sys B indicates fluid is low — <em>refill required</em></div>
+            </div>
+
+            <div class="tab-content" id="tc-gear">
+              <div class="info-row"><div class="bullet"></div><strong>Tire pressure</strong> shown in PSI for each gear assembly</div>
+              <div class="info-row"><div class="bullet"></div><strong>Brake temperature</strong> in °C (amber = elevated)</div>
+              <div class="info-row"><div class="bullet orange"></div>Amber values (130 psi, 5.1°C) indicate deviations from normal — compare against AMM limits</div>
+              <div class="info-row"><div class="bullet"></div>NLG = Nose Landing Gear; MLG = Main Landing Gear</div>
+            </div>
+
+            <div class="tab-content" id="tc-surfaces">
+              <div class="info-row"><div class="bullet"></div><strong>AIL</strong> — aileron position (left and right)</div>
+              <div class="info-row"><div class="bullet"></div><strong>FLT SPLR</strong> — flight spoiler position</div>
+              <div class="info-row"><div class="bullet"></div><strong>ELEV</strong> — elevator position</div>
+              <div class="info-row"><div class="bullet"></div><strong>RUDDER</strong> — rudder deflection</div>
+              <div class="info-row"><div class="bullet orange"></div>All positions shown relative to neutral/centre</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 2 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 2 — INFO Format Overview
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-2">
+      <div class="slide-eyebrow">ATA 31-62-00 · Slide 3 of 21</div>
+      <div class="slide-title">MDS — INFO Format Overview</div>
+      <div class="slide-subtitle">Accessing the N1/SPD REF SET page and using the SELECTOR switches</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">How to Access INFO Format</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">Push the INFO switch</div>
+                <div class="step-desc">Located on the Multi-Function Panel (MFP)</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <div class="step-title">N1/SPD REF SET page appears</div>
+                <div class="step-desc">Shows on the multi-function display (MFD)</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <div class="step-title">Use SELECTOR switches to navigate</div>
+                <div class="step-desc">Move highlight box, select items, adjust values</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-label" style="margin-top:1rem">What You Can Set</div>
+          <div class="info-row"><div class="bullet"></div><strong>N1 thrust limits</strong> — shown on the Engine Indication (EI) display</div>
+          <div class="info-row"><div class="bullet"></div><strong>Reference speeds</strong> — V1, VR, VREF</div>
+          <div class="info-row"><div class="bullet"></div><strong>Gross weight</strong></div>
+          <div class="info-row"><div class="bullet"></div><strong>Speed reference bug</strong> — shown on Primary Flight Display (PFD)</div>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="info-label">Diamond Indicator Logic</div>
+            <div class="callout info">
+              <span class="callout-icon">ℹ</span>
+              <span>The colour of the diamond next to each menu item tells you whether it is selectable.</span>
+            </div>
+            <div class="diamond-grid">
+              <div class="diamond-item">
+                <div class="diamond gray"></div>
+                <div>
+                  <span style="color:#fff;font-weight:600">Gray diamond</span> — menu item is <span style="color:var(--accent3)">enabled and selectable</span>
+                </div>
+              </div>
+              <div class="diamond-item">
+                <div class="diamond cyan"></div>
+                <div>
+                  <span style="color:#fff;font-weight:600">Cyan diamond</span> — menu item is <span style="color:var(--danger)">not enabled / not selectable</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:1rem">
+            <div class="info-label">SELECTOR Switch Functions</div>
+            <div class="info-row"><div class="bullet"></div>Rotate to <strong>move the highlight box</strong> between menu items</div>
+            <div class="info-row"><div class="bullet"></div>Press to <strong>select a menu item</strong></div>
+            <div class="info-row"><div class="bullet orange"></div>Rotate when value is selected to <strong>adjust numerical values</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 3 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 3 — N1/SPD REF SET Page
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-3">
+      <div class="slide-eyebrow">ATA 31-62-00 · Slide 4 of 21</div>
+      <div class="slide-title">N1/SPD REF SET Page</div>
+      <div class="slide-subtitle">Interactive mock-up of the INFO format display — click items to learn more</div>
+
+      <div class="two-col">
+        <div>
+          <div class="display-mock scan-line">
+            <div class="display-hdr" style="border-bottom:1px solid rgba(0,200,255,0.2);padding-bottom:0.5rem;margin-bottom:0.75rem">N1/SPD REF SET</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.72rem">
+              <div>
+                <div style="color:var(--accent);font-size:0.6rem;letter-spacing:1px;margin-bottom:0.3rem">N1 SET</div>
+                <div class="n1-item" style="background:rgba(0,200,255,0.15);border:1px solid var(--accent);border-radius:3px;padding:3px 8px;margin-bottom:3px;cursor:pointer;display:flex;align-items:center;gap:6px" onclick="showInfo('n1auto')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> AUTO
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;border:1px solid transparent;margin-bottom:2px;cursor:pointer" onclick="showInfo('both')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> BOTH
+                  <span style="color:var(--accent);border:1px solid var(--accent);padding:1px 6px;font-size:0.6rem">--</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('eng1')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> ENG 1
+                  <span style="color:var(--accent);border:1px solid var(--accent);padding:1px 6px;font-size:0.6rem">--</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('eng2')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> ENG 2
+                  <span style="color:var(--accent);border:1px solid var(--accent);padding:1px 6px;font-size:0.6rem">--</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;cursor:pointer" onclick="showInfo('set')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> SET
+                </div>
+              </div>
+              <div style="border-left:1px solid rgba(255,255,255,0.1);padding-left:0.5rem">
+                <div style="color:var(--accent);font-size:0.6rem;letter-spacing:1px;margin-bottom:0.3rem">SPD REF</div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('spdauto')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> AUTO
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('v1')">
+                  <div class="diamond cyan" style="width:10px;height:10px"></div>
+                  <span style="color:var(--accent)">V1</span>
+                  <span style="color:var(--accent);border:1px solid var(--accent);padding:1px 6px;font-size:0.6rem">--</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('vr')">
+                  <div class="diamond cyan" style="width:10px;height:10px"></div>
+                  <span style="color:var(--accent)">VR</span>
+                  <span style="color:var(--accent);border:1px solid var(--accent);padding:1px 6px;font-size:0.6rem">--</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('wt')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> WT
+                  <span style="color:#fff;border:1px solid #fff;padding:1px 6px;font-size:0.6rem">141000</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;margin-bottom:2px;cursor:pointer" onclick="showInfo('vref')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> VREF
+                  <span style="background:#555;color:#fff;padding:1px 10px;font-size:0.6rem">70</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;padding:3px 8px;cursor:pointer" onclick="showInfo('spdset')">
+                  <div class="diamond gray" style="width:10px;height:10px"></div> SET
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.4rem;font-family:'Share Tech Mono',monospace">↑ Click any item to learn about it</div>
+        </div>
+
+        <div>
+          <div class="card" id="info-panel">
+            <div class="info-label" id="info-panel-label">Select a menu item</div>
+            <div id="info-panel-text" style="color:var(--muted);font-size:0.88rem;line-height:1.6">
+              Click any item on the N1/SPD REF SET display to the left to learn what it does.
+            </div>
+          </div>
+
+          <div class="callout tip" style="margin-top:1rem">
+            <span class="callout-icon">✦</span>
+            <span><strong>Cyan diamonds</strong> (V1, VR) show items not selectable because N1 SET AUTO is active — the FMS is computing these values automatically.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 4 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 4 — Manual Reversion Overview
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-4">
+      <div class="slide-eyebrow">ATA 31-62-00 · Slide 5 of 21</div>
+      <div class="slide-title">MDS — Manual Reversion</div>
+      <div class="slide-subtitle">Switching displays manually in the event of an undetected Display Unit (DU) failure</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">Purpose</div>
+          <div class="callout warn">
+            <span class="callout-icon">⚠</span>
+            <span>Manual reversion is used when an undetected DU failure occurs — the system does not auto-reconfigure.</span>
+          </div>
+          <div class="info-row" style="margin-top:0.5rem"><div class="bullet"></div>Use the <strong>display selector switches</strong> on each flight crew's <strong>brightness control panel</strong></div>
+          <div class="info-row"><div class="bullet"></div>Located <strong>in front of the control column</strong> on each side</div>
+          <div class="info-row"><div class="bullet orange"></div>Switch has three positions: <strong>NORM</strong>, <strong>OUTBOARD</strong>, <strong>INBOARD</strong></div>
+
+          <div class="info-label" style="margin-top:1rem">Power-Up Behaviour</div>
+          <div class="info-row"><div class="bullet"></div>During power-up, each DU reads its <strong>position pins</strong></div>
+          <div class="info-row"><div class="bullet"></div>The position <strong>latches into DU memory</strong></div>
+          <div class="info-row"><div class="bullet orange"></div>If a DU cannot read position pins → DU is <strong>blank</strong></div>
+        </div>
+
+        <div class="card">
+          <div class="info-label">Display Selector Switch Positions</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num" style="background:rgba(0,255,157,0.1);border-color:var(--accent3);color:var(--accent3)">N</div>
+              <div class="step-content">
+                <div class="step-title">NORM</div>
+                <div class="step-desc">Normal displays show on <em>both</em> inboard and outboard DUs</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:rgba(0,200,255,0.1)">O</div>
+              <div class="step-content">
+                <div class="step-title">OUTBOARD</div>
+                <div class="step-desc">Inboard DU goes blank. Outboard DU: outboard half = cropped PFD, inboard half = engine display (or last shown format)</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:rgba(255,107,53,0.1);border-color:var(--accent2);color:var(--accent2)">I</div>
+              <div class="step-content">
+                <div class="step-title">INBOARD</div>
+                <div class="step-desc">Outboard DU goes blank. Inboard DU shows: cropped PFD + engine display (or last shown format)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 5 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 5 — NORM / OUTBD / INBD modes interactive
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-5">
+      <div class="slide-eyebrow">ATA 31-62-00 · Slide 6 of 21</div>
+      <div class="slide-title">Switching Modes — Interactive Demo</div>
+      <div class="slide-subtitle">Select each switch position to see how the Captain's display units reconfigure</div>
+
+      <div class="card" style="margin-bottom:1.25rem">
+        <div class="info-label">Captain Lighting Control Module — PFD/MFD Switch</div>
+        <div style="display:flex;gap:1rem;margin-top:0.5rem">
+          <button class="nav-btn" id="mode-norm" onclick="setMode('NORM')" style="border-color:var(--accent3);color:var(--accent3)">NORM</button>
+          <button class="nav-btn" id="mode-outbd" onclick="setMode('OUTBOARD')">OUTBOARD</button>
+          <button class="nav-btn" id="mode-inbd" onclick="setMode('INBOARD')">INBOARD</button>
+        </div>
+        <div style="margin-top:0.75rem;font-size:0.85rem;color:var(--muted)" id="mode-desc">
+          <strong style="color:var(--accent3)">NORM:</strong> Normal operation — both inboard and outboard DUs show their standard displays.
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start">
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT OUTBOARD DU</div>
+          <div class="du-box active-du" id="outbd-du" style="min-height:140px;flex-direction:column;gap:0.5rem">
+            <div id="outbd-pfd" style="width:100%;text-align:center;padding:0.3rem;border-bottom:1px solid rgba(0,255,157,0.2)">OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">PFD (cropped in OUTBD)</span></div>
+            <div id="outbd-inner" style="width:100%;text-align:center;padding:0.3rem">INBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">Engine Display</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT INBOARD DU</div>
+          <div class="du-box active-du" id="inbd-du" style="min-height:140px;flex-direction:column;gap:0.5rem">
+            <div id="inbd-pfd" style="width:100%;text-align:center;padding:0.3rem;border-bottom:1px solid rgba(0,255,157,0.2)">PFD (full)<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span></div>
+            <div id="inbd-nav" style="width:100%;text-align:center;padding:0.3rem">NAV DISPLAY<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 6 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 6 — ENG Switch
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-6">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 7 of 21</div>
+      <div class="slide-title">MDS — Engine Switch (ENG)</div>
+      <div class="slide-subtitle">Toggling secondary engine data on the Engine Indication (EI) format</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">Function</div>
+          <div class="info-row"><div class="bullet"></div>The <strong>ENG push-button</strong> is on the <strong>Multi-Function Panel (MFP)</strong></div>
+          <div class="info-row"><div class="bullet"></div>Each press <strong>removes</strong> or <strong>adds</strong> the secondary engine data on the EI format</div>
+          <div class="info-row"><div class="bullet orange"></div>The <strong>fuel flow (FF)</strong> indication can show continuously — it does not declutter</div>
+
+          <div class="info-label" style="margin-top:1rem">Toggle Sequence</div>
+          <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;flex-wrap:wrap;margin-top:0.25rem">
+            <div style="background:rgba(0,200,255,0.1);border:1px solid var(--accent);border-radius:6px;padding:0.5rem 0.75rem;text-align:center">
+              <div style="font-weight:600;color:#fff">EI Format</div>
+              <div style="color:var(--muted);font-size:0.7rem">Full secondary data</div>
+            </div>
+            <div style="color:var(--accent);font-size:1rem">→ ENG →</div>
+            <div style="background:rgba(255,190,11,0.08);border:1px solid var(--warning);border-radius:6px;padding:0.5rem 0.75rem;text-align:center">
+              <div style="font-weight:600;color:#fff">EI Decluttered</div>
+              <div style="color:var(--muted);font-size:0.7rem">Secondary data hidden</div>
+            </div>
+            <div style="color:var(--accent);font-size:1rem">→ ENG →</div>
+            <div style="background:rgba(0,200,255,0.1);border:1px solid var(--accent);border-radius:6px;padding:0.5rem 0.75rem;text-align:center">
+              <div style="font-weight:600;color:#fff">EI Format</div>
+              <div style="color:var(--muted);font-size:0.7rem">Full secondary data</div>
+            </div>
+          </div>
+
+          <div class="callout tip" style="margin-top:1rem">
+            <span class="callout-icon">✦</span>
+            <span>The ENG button is a <strong>toggle</strong> — one press declutters, the next press restores secondary data. FF always remains visible.</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="info-label">Interactive EI Format Demo</div>
+          <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.75rem">
+            <button class="mfd-btn active-btn" id="eng-toggle-btn" onclick="toggleEng()" style="font-size:0.8rem;padding:6px 16px">ENG</button>
+            <span style="font-size:0.78rem;color:var(--muted)" id="eng-toggle-label">Press ENG to declutter secondary data</span>
+          </div>
+          <div class="ei-mock" id="ei-display">
+            <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted)"><span>TAT +15c</span><span>TO</span><span>18c</span><span style="color:#0f0">ENG 1</span><span style="color:#0f0">ENG 2</span></div>
+            <div class="ei-row"><span class="ei-label">N1%</span><span class="ei-val">96.0 / 95.0</span></div>
+            <div class="ei-row"><span class="ei-label">EGT °C</span><span class="ei-val">420 / 420</span></div>
+            <div class="ei-row secondary-row"><span class="ei-label">N2%</span><span class="ei-val">58.8 / 58.8</span></div>
+            <div class="ei-row"><span class="ei-label">FF PPH</span><span class="ei-val">0.69 / 0.69</span></div>
+            <div class="ei-row secondary-row"><span class="ei-label">OIL PRESS</span><span class="ei-val">22 / 22</span></div>
+            <div class="ei-row secondary-row"><span class="ei-label">OIL TEMP</span><span class="ei-val">96 / 96</span></div>
+            <div class="ei-row secondary-row"><span class="ei-label">OIL QTY</span><span class="ei-val">20 / 20</span></div>
+            <div class="ei-row secondary-row"><span class="ei-label">VIB</span><span class="ei-val">0.1 / 0.1</span></div>
+            <div class="ei-row" style="margin-top:4px"><span class="ei-label">FUEL LB</span><span class="ei-val">4950 / 4950</span></div>
+            <div class="ei-row"><span class="ei-label">TOTAL</span><span class="ei-val" style="color:var(--accent)">9900</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 7 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 7 — DISPLAYS-SOURCE SWITCH
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-7">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 8 of 21</div>
+      <div class="slide-title">MDS — Displays-Source Switch</div>
+      <div class="slide-subtitle">Selecting which Display Processor Computer (DPC) controls the display units</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">What the Switch Does</div>
+          <div class="info-row"><div class="bullet"></div>The <strong>DISPLAYS-SOURCE switch</strong> selects which <strong>Display Processor Computer (DPC)</strong> controls the display units</div>
+          <div class="info-row"><div class="bullet"></div>Normally in the <strong>AUTO</strong> position</div>
+
+          <div class="info-label" style="margin-top:1rem">Switch Positions</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num" style="background:rgba(0,255,157,0.1);border-color:var(--accent3);color:var(--accent3)">A</div>
+              <div class="step-content">
+                <div class="step-title">AUTO (normal)</div>
+                <div class="step-desc">No failures: DPC 1 → Left DUs (LOB + LIB); DPC 2 → Right DUs (RIB + ROB). With a failure, routing adjusts automatically to keep all display data available.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">ALL ON 1</div>
+                <div class="step-desc">DPC 1 controls <em>all four</em> display units. PFD shows <strong style="color:var(--warning)">DSPLY SOURCE 2</strong> — indicating DPC 2 is not supplying display data.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:rgba(255,107,53,0.1);border-color:var(--accent2);color:var(--accent2)">2</div>
+              <div class="step-content">
+                <div class="step-title">ALL ON 2</div>
+                <div class="step-desc">DPC 2 controls <em>all four</em> display units. PFD shows <strong style="color:var(--warning)">DSPLY SOURCE 1</strong> — indicating DPC 1 is not supplying display data.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout warn" style="margin-top:0.5rem">
+            <span class="callout-icon">⚠</span>
+            <span><strong>Training Point:</strong> The PFD message tells you which DPC is <em>NOT</em> supplying data — the opposite of the switch position selected.</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Interactive Source Switch</div>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem">
+              <button class="nav-btn" id="src-auto" onclick="setSource('AUTO')" style="border-color:var(--accent3);color:var(--accent3)">AUTO</button>
+              <button class="nav-btn" id="src-1" onclick="setSource('1')">ALL ON 1</button>
+              <button class="nav-btn" id="src-2" onclick="setSource('2')">ALL ON 2</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem">
+              <div>
+                <div style="color:var(--muted);font-size:0.6rem;letter-spacing:1px;margin-bottom:4px">LEFT DUs (LOB + LIB)</div>
+                <div id="src-left" style="background:#000;border:1px solid rgba(0,200,255,0.4);border-radius:4px;padding:0.5rem;color:var(--accent3);text-align:center;transition:all 0.4s">DPC 1 / GC A</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:0.6rem;letter-spacing:1px;margin-bottom:4px">RIGHT DUs (RIB + ROB)</div>
+                <div id="src-right" style="background:#000;border:1px solid rgba(0,200,255,0.4);border-radius:4px;padding:0.5rem;color:var(--accent3);text-align:center;transition:all 0.4s">DPC 2 / GC B</div>
+              </div>
+            </div>
+            <div id="src-pfd-msg" style="display:none;margin-top:0.75rem;background:#2a1a00;border:1px solid var(--warning);border-radius:4px;padding:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--warning);text-align:center"></div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">DU Abbreviations</div>
+            <div class="info-row"><div class="bullet"></div><strong>LOB</strong> — Left Outboard DU (Captain's PFD side)</div>
+            <div class="info-row"><div class="bullet"></div><strong>LIB</strong> — Left Inboard DU (Captain's Nav side)</div>
+            <div class="info-row"><div class="bullet"></div><strong>RIB</strong> — Right Inboard DU (F/O's Nav side)</div>
+            <div class="info-row"><div class="bullet orange"></div><strong>ROB</strong> — Right Outboard DU (F/O's PFD side)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 8 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 8 — DPC Routing Table
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-8">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 9 of 21</div>
+      <div class="slide-title">DPC Routing Table</div>
+      <div class="slide-subtitle">How each switch position and failure scenario routes graphics card (GC) data to each display unit</div>
+
+      <div class="callout info" style="margin-bottom:1rem">
+        <span class="callout-icon">ℹ</span>
+        <span>Each DPC has two Graphics Cards: <strong>GC A</strong> and <strong>GC B</strong>. The routing table shows which DPC/GC combination drives each display unit for every failure scenario.</span>
+      </div>
+
+      <div class="card" style="overflow-x:auto">
+        <div class="info-label">Display Source Routing — AUTO Position (selected failure scenarios)</div>
+        <table style="width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:0.72rem;min-width:500px">
+          <thead>
+            <tr>
+              <th style="background:rgba(0,200,255,0.1);color:var(--accent);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);font-size:0.65rem;letter-spacing:1px">FAILURES</th>
+              <th style="background:rgba(0,200,255,0.1);color:var(--accent);padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)">LOB</th>
+              <th style="background:rgba(0,200,255,0.1);color:var(--accent);padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)">LIB</th>
+              <th style="background:rgba(0,200,255,0.1);color:var(--accent);padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)">RIB</th>
+              <th style="background:rgba(0,200,255,0.1);color:var(--accent);padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)">ROB</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:rgba(0,255,157,0.04)">
+              <td style="padding:5px 8px;color:var(--accent3);border-bottom:1px solid rgba(255,255,255,0.04)">NONE</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 1 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 1 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 8px;color:var(--warning);border-bottom:1px solid rgba(255,255,255,0.04)">DPC 1 GC A fail</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--warning)">DPC 1 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--warning)">DPC 1 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+            </tr>
+            <tr style="background:rgba(0,255,157,0.04)">
+              <td style="padding:5px 8px;color:var(--warning);border-bottom:1px solid rgba(255,255,255,0.04)">DPC 1 GC A&amp;B fail</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--danger)">DPC 2 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--danger)">DPC 2 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 2 / GC B</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 8px;color:var(--warning);border-bottom:1px solid rgba(255,255,255,0.04)">DPC 2 GC A fail</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 1 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:#fff">DPC 1 / GC A</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--warning)">DPC 2 / GC B</td>
+              <td style="padding:5px 8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--warning)">DPC 2 / GC B</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+        <div class="card" style="background:rgba(0,200,255,0.04)">
+          <div class="info-label">ALL ON 1 — No Failures</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;line-height:2">
+            <div style="color:#fff">LOB: <span style="color:var(--accent)">DPC 1 / GC A</span></div>
+            <div style="color:#fff">LIB: <span style="color:var(--accent)">DPC 1 / GC A</span></div>
+            <div style="color:#fff">RIB: <span style="color:var(--accent)">DPC 1 / GC B</span></div>
+            <div style="color:#fff">ROB: <span style="color:var(--accent)">DPC 1 / GC B</span></div>
+          </div>
+          <div style="margin-top:0.5rem;color:var(--warning);font-size:0.72rem;font-family:'Share Tech Mono',monospace">PFD: DSPLY SOURCE 2</div>
+        </div>
+        <div class="card" style="background:rgba(255,107,53,0.04)">
+          <div class="info-label">ALL ON 2 — No Failures</div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;line-height:2">
+            <div style="color:#fff">LOB: <span style="color:var(--accent2)">DPC 2 / GC A</span></div>
+            <div style="color:#fff">LIB: <span style="color:var(--accent2)">DPC 2 / GC A</span></div>
+            <div style="color:#fff">RIB: <span style="color:var(--accent2)">DPC 2 / GC B</span></div>
+            <div style="color:#fff">ROB: <span style="color:var(--accent2)">DPC 2 / GC B</span></div>
+          </div>
+          <div style="margin-top:0.5rem;color:var(--warning);font-size:0.72rem;font-family:'Share Tech Mono',monospace">PFD: DSPLY SOURCE 1</div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 9 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 9 — DISPLAYS-CONTROL PANEL SWITCH
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-9">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 10 of 21</div>
+      <div class="slide-title">MDS — Displays-Control Panel Switch</div>
+      <div class="slide-subtitle">Selecting which EFIS control panel governs primary flight and navigation data</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">Overview</div>
+          <div class="info-row"><div class="bullet"></div>A <strong>three-position toggle switch</strong> on the Instrument Switching Module</div>
+          <div class="info-row"><div class="bullet"></div>Selects which <strong>EFIS control panel</strong> controls PFD and nav data on each side</div>
+
+          <div class="info-label" style="margin-top:1rem">Switch Positions</div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num" style="background:rgba(0,255,157,0.1);border-color:var(--accent3);color:var(--accent3)">N</div>
+              <div class="step-content">
+                <div class="step-title">NORMAL</div>
+                <div class="step-desc">Captain EFIS CP → Left DUs. First Officer EFIS CP → Right DUs. (Each side controls its own displays.)</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <div class="step-title">BOTH ON 1</div>
+                <div class="step-desc">Captain EFIS CP controls <em>both</em> left and right display units.</div>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num" style="background:rgba(255,107,53,0.1);border-color:var(--accent2);color:var(--accent2)">2</div>
+              <div class="step-content">
+                <div class="step-title">BOTH ON 2</div>
+                <div class="step-desc">First Officer EFIS CP controls <em>both</em> left and right display units.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Interactive Control Panel Switch</div>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
+              <button class="nav-btn" id="cp-norm" onclick="setCPanel('NORMAL')" style="border-color:var(--accent3);color:var(--accent3)">NORMAL</button>
+              <button class="nav-btn" id="cp-1" onclick="setCPanel('BOTH ON 1')">BOTH ON 1</button>
+              <button class="nav-btn" id="cp-2" onclick="setCPanel('BOTH ON 2')">BOTH ON 2</button>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-family:'Share Tech Mono',monospace;font-size:0.75rem">
+              <div>
+                <div style="color:var(--muted);font-size:0.6rem;letter-spacing:1px;margin-bottom:4px">CAPTAIN DISPLAYS (Left)</div>
+                <div id="cp-left" style="background:#000;border:1px solid rgba(0,200,255,0.4);border-radius:4px;padding:0.6rem;color:var(--accent3);text-align:center;transition:all 0.4s">CAPT EFIS CP</div>
+              </div>
+              <div>
+                <div style="color:var(--muted);font-size:0.6rem;letter-spacing:1px;margin-bottom:4px">F/O DISPLAYS (Right)</div>
+                <div id="cp-right" style="background:#000;border:1px solid rgba(255,107,53,0.4);border-radius:4px;padding:0.6rem;color:var(--accent2);text-align:center;transition:all 0.4s">F/O EFIS CP</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">Quick Reference Table</div>
+            <table style="width:100%;border-collapse:collapse;font-family:'Share Tech Mono',monospace;font-size:0.72rem">
+              <tr style="border-bottom:1px solid var(--border)">
+                <th style="color:var(--accent);text-align:left;padding:4px 6px;font-size:0.6rem">SWITCH</th>
+                <th style="color:var(--accent);text-align:center;padding:4px 6px;font-size:0.6rem">CAPT DSPLY</th>
+                <th style="color:var(--accent);text-align:center;padding:4px 6px;font-size:0.6rem">F/O DSPLY</th>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+                <td style="padding:4px 6px;color:var(--accent3)">NORMAL</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">CAPT EFIS CP</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">F/O EFIS CP</td>
+              </tr>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+                <td style="padding:4px 6px;color:var(--accent)">BOTH ON 1</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">CAPT EFIS CP</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">CAPT EFIS CP</td>
+              </tr>
+              <tr>
+                <td style="padding:4px 6px;color:var(--accent2)">BOTH ON 2</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">F/O EFIS CP</td>
+                <td style="text-align:center;padding:4px 6px;color:#fff">F/O EFIS CP</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 10 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 10 — PFD Messages
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-10">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 11 of 21</div>
+      <div class="slide-title">MDS — PFD Status Messages</div>
+      <div class="slide-subtitle">Three amber messages that appear on the Primary Flight Display to alert flight crew of display system faults</div>
+
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Three PFD Messages</div>
+
+            <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.5rem">
+              <div style="background:#2a1a00;border:1px solid var(--warning);border-radius:5px;padding:0.6rem 0.9rem;cursor:pointer" onclick="showPfdMsg('cp')">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--warning);font-weight:700">DISPLAYS CONTROL PANEL</div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">EFIS control panel failure → click to expand</div>
+              </div>
+              <div style="background:#2a1a00;border:1px solid var(--warning);border-radius:5px;padding:0.6rem 0.9rem;cursor:pointer" onclick="showPfdMsg('src1')">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--warning);font-weight:700">DSPLY SOURCE 1</div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">DPC 1 not supplying display data → click to expand</div>
+              </div>
+              <div style="background:#2a1a00;border:1px solid var(--warning);border-radius:5px;padding:0.6rem 0.9rem;cursor:pointer" onclick="showPfdMsg('src2')">
+                <div style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--warning);font-weight:700">DSPLY SOURCE 2</div>
+                <div style="font-size:0.78rem;color:var(--muted);margin-top:2px">DPC 2 not supplying display data → click to expand</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PFD mock -->
+          <div style="background:#3d3000;border:1px solid rgba(255,190,11,0.3);border-radius:6px;padding:0.75rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;min-height:80px">
+            <div style="font-size:0.55rem;color:rgba(255,190,11,0.6);letter-spacing:1px;margin-bottom:6px">PRIMARY FLIGHT DISPLAY</div>
+            <div id="pfd-mock-msg" style="color:var(--warning);font-size:0.8rem;font-weight:700">
+              (Select a message above to preview on PFD)
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="pfd-detail-panel">
+          <div class="info-label" id="pfd-panel-title">Select a message</div>
+          <div id="pfd-panel-body" style="color:var(--muted);font-size:0.88rem;line-height:1.6">
+            Click any amber message on the left to see full details about when it appears and what it means.
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 11 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 11 — MAS Overview
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-11">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 12 of 21</div>
+      <div class="slide-title">MDS — Maintenance Awareness System (MAS)</div>
+      <div class="slide-subtitle">Overview of MAS components and the MAINT light behaviour</div>
+
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">What is MAS?</div>
+            <div class="info-row"><div class="bullet"></div>MAS provides information directly related to <strong>airworthiness and system status</strong></div>
+            <div class="info-row"><div class="bullet"></div>Three components: <strong>Status Messages Page</strong>, <strong>Maintenance Data Pages</strong>, <strong>Maintenance Control Pages</strong></div>
+          </div>
+
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">MAINT Light</div>
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem">
+              <div id="maint-light" style="width:60px;height:28px;background:#3a2000;border:2px solid #6a4000;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:#6a4000;cursor:pointer;transition:all 0.4s" onclick="toggleMaintLight()">MAINT</div>
+              <span style="font-size:0.8rem;color:var(--muted)" id="maint-light-status">Click to toggle light state</span>
+            </div>
+            <div class="info-row"><div class="bullet orange"></div>Lights when there is a <strong>system fault affecting airworthiness</strong></div>
+            <div class="info-row"><div class="bullet"></div><strong>Goes out</strong> when the first engine starts</div>
+            <div class="info-row"><div class="bullet orange"></div>Comes <strong>back on</strong> (if needed) 30 sec after touchdown or when engines are off</div>
+            <div class="info-row"><div class="bullet"></div>Each DPC controls MAINT light via <strong>analog discrete</strong></div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">Systems DPCs Monitor (Faults Feed)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:0.78rem">
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>APU</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>EEC</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>FMC</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>IASC</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>EBAS</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>PSEU</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>SCU</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>SMYD</div>
+              <div class="info-row" style="grid-column:span 2"><div class="bullet orange"></div>TBMU (Tire Brake Monitoring Unit)</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Status Messages Page</div>
+            <div class="info-row"><div class="bullet"></div>Accessed via <strong>SYS switch → MAINT soft key</strong> (ground only)</div>
+            <div class="info-row"><div class="bullet"></div>Shows <strong>top-level maintenance menu</strong> and status messages</div>
+            <div class="info-row"><div class="bullet orange"></div>Any STATUS MESSAGE = fault requiring <strong>repair or deferral</strong></div>
+            <div class="info-row"><div class="bullet"></div>DPC illuminates MAINT light when a status message is present</div>
+          </div>
+
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Maintenance Data Pages</div>
+            <div class="info-row"><div class="bullet"></div>Air conditioning systems</div>
+            <div class="info-row"><div class="bullet"></div>Flight control systems</div>
+            <div class="info-row"><div class="bullet"></div>Stall management yaw damper (SMYD)</div>
+            <div class="info-row"><div class="bullet"></div>Proximity switch electronic unit (PSEU)</div>
+            <div class="info-row"><div class="bullet"></div>Air supply systems</div>
+            <div class="info-row"><div class="bullet orange"></div>Performance system, APU, Main engine systems</div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">Maintenance Control Pages</div>
+            <div class="info-row"><div class="bullet"></div><strong>ACD</strong> — Airplane Configuration Data</div>
+            <div class="info-row"><div class="bullet"></div><strong>MSC</strong> — Miscellaneous System Controls</div>
+            <div class="info-row"><div class="bullet"></div>Latched Message Erase</div>
+            <div class="info-row"><div class="bullet orange"></div>Maint Light</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 12 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 12 — Status Messages Page
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-12">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 13 of 21</div>
+      <div class="slide-title">MAS — Status Messages Page</div>
+      <div class="slide-subtitle">Accessing the STATUS MESSAGES page and understanding what each message means</div>
+
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">How to Access</div>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <div class="step-title">Press SYS on Multi-Function Panel</div>
+                  <div class="step-desc">Opens the systems page on the MFD</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <div class="step-title">Select MAINT soft key</div>
+                  <div class="step-desc">Only available when aircraft is on the ground</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <div class="step-title">Status Messages page appears</div>
+                  <div class="step-desc">Shows up to 28 messages per page. Use NEXT PAGE to scroll.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout warn">
+            <span class="callout-icon">⚠</span>
+            <span>If <strong>any STATUS MESSAGE is present</strong>, there is a fault that must be repaired or deferred before the aircraft can be released to service.</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">MDS STATUS MESSAGES PAGE (Interactive)</div>
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;overflow:hidden">
+            <div style="display:flex;gap:2px;padding:4px;background:#111;border-bottom:1px solid #333;font-family:'Share Tech Mono',monospace;font-size:0.6rem">
+              <div style="padding:3px 8px;background:#1a1a1a;border:1px solid #555;color:#aaa;border-radius:2px;cursor:pointer">SYS MENU</div>
+              <div id="status-tab" style="padding:3px 8px;background:rgba(0,200,255,0.2);border:1px solid var(--accent);color:var(--accent);border-radius:2px;cursor:pointer" onclick="setMasTab('STATUS')">STATUS</div>
+              <div id="maintdata-tab" style="padding:3px 8px;background:#1a1a1a;border:1px solid #555;color:#aaa;border-radius:2px;cursor:pointer" onclick="setMasTab('MAINTDATA')">MAINT DATA PGS</div>
+              <div style="padding:3px 8px;background:#1a1a1a;border:1px solid #555;color:#aaa;border-radius:2px;cursor:pointer">MAINT CTRL PGS</div>
+            </div>
+            <div id="mas-content-status" style="padding:0.75rem;min-height:200px">
+              <div style="border:1px solid rgba(0,200,255,0.3);border-radius:3px;padding:0.5rem;margin-bottom:6px;font-size:0.6rem;color:var(--accent);letter-spacing:1px;text-align:center">STATUS MESSAGES</div>
+              <div id="status-msg-list" style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;line-height:1.8">
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('eng')">ENG LPTACC VALVE L</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('apu')">APU DOOR</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('bleed')">BLEED FAMV L</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('spoiler')">SPOILER PAIR 4/9</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('pack')">PACK IASC COMM L</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('pseu')">PSEU COMM</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('dsply')">DISPLAYS CONFIG DATA</div>
+                <div style="color:#0f0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);padding:2px 4px" onclick="showStatusInfo('sw')">DISPLAYS SOFTWARE CONFIG</div>
+                <div style="color:#0f0;cursor:pointer;padding:2px 4px" onclick="showStatusInfo('dpc')">DPC 1</div>
+              </div>
+            </div>
+            <div id="mas-content-maintdata" style="padding:0.75rem;min-height:200px;display:none;font-family:'Share Tech Mono',monospace;font-size:0.7rem">
+              <div style="color:var(--muted);font-size:0.65rem">Switch to MAINT DATA PGS tab to see the data page list</div>
+            </div>
+          </div>
+
+          <div class="card" id="status-info-card" style="margin-top:0.75rem;display:none">
+            <div class="info-label" id="status-info-title"></div>
+            <div id="status-info-body" style="font-size:0.85rem;color:var(--text);line-height:1.5"></div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.3rem;font-family:'Share Tech Mono',monospace">↑ Click any status message to learn about it</div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 13 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 13 — Maintenance Data Pages
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-13">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 14 of 21</div>
+      <div class="slide-title">MAS — Maintenance Data Pages</div>
+      <div class="slide-subtitle">10 systems with detailed maintenance data for fault isolation — accessible on ground (or above 10,000 ft if configured)</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">Key Facts</div>
+          <div class="info-row"><div class="bullet"></div><strong>10 systems</strong> have maintenance data pages</div>
+          <div class="info-row"><div class="bullet"></div>Multiple pages for some systems: <strong>MDS — 19 pages</strong>, PSEU — 2 pages, EPCS — 4 pages</div>
+          <div class="info-row"><div class="bullet orange"></div>Data shown in <strong>real time</strong> or as an <strong>event (snapshot)</strong></div>
+          <div class="info-row"><div class="bullet"></div>Events are <em>manually initiated</em> or <em>auto-generated</em> on system exceedance</div>
+          <div class="info-row"><div class="bullet orange"></div>Operator can <strong>print or downlink</strong> pages to ground stations</div>
+
+          <div class="info-label" style="margin-top:1rem">Access Condition</div>
+          <div class="callout tip" style="margin-top:0">
+            <span class="callout-icon">✦</span>
+            <span>Maintenance pages are available when the <strong>airplane is on the ground</strong>, or above <strong>10,000 feet</strong> if previously configured.</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="info-label">Systems with Maintenance Data Pages</div>
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;font-size:0.8rem;align-items:center;margin-top:0.25rem">
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 21</span><span>Air Conditioning</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 27</span><span>Flight Control</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 27</span><span>SMYD</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 31</span><span>MDS <span style="color:var(--accent2)">(19 pages)</span></span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real only</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 32</span><span>PSEU <span style="color:var(--accent2)">(2 pages)</span></span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 36</span><span>Air Supply</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 49</span><span>APU</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 71</span><span>Performance</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 71</span><span>EPCS <span style="color:var(--accent2)">(4 pages)</span></span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Real/Manual/Auto</span>
+            <span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--accent)">ATA 71</span><span>Engine 1 &amp; 2 Exceedance</span><span style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted)">Auto only</span>
+          </div>
+
+          <div class="info-label" style="margin-top:1rem">Data Output Options</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.25rem">
+            <span style="background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.3);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;padding:4px 10px;border-radius:3px">DISPLAY</span>
+            <span style="background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.3);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;padding:4px 10px;border-radius:3px">PRINT SELECTION</span>
+            <span style="background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.3);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;padding:4px 10px;border-radius:3px">DATALINK SELECTION</span>
+            <span style="background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.3);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:0.65rem;padding:4px 10px;border-radius:3px">ERASE SELECTION</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 14 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 14 — Main Menu Bar Selections
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-14">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 15 of 21</div>
+      <div class="slide-title">MAS — Main Menu Bar Selections</div>
+      <div class="slide-subtitle">Four functions on the Maintenance Data Pages main menu bar — click each to explore</div>
+
+      <div class="two-col">
+        <div>
+          <!-- Realistic MAS menu bar mockup -->
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;overflow:hidden;font-family:'Share Tech Mono',monospace">
+            <!-- Top nav bar -->
+            <div style="display:flex;gap:1px;background:#1a1a1a;border-bottom:1px solid #333;font-size:0.58rem">
+              <div style="padding:4px 8px;color:#aaa;cursor:pointer;white-space:nowrap">▲ SYS MENU</div>
+              <div style="padding:4px 8px;color:#aaa;cursor:pointer">STATUS</div>
+              <div style="padding:4px 8px;background:rgba(0,200,255,0.15);color:var(--accent);cursor:pointer;border:1px solid rgba(0,200,255,0.4)">MAINT DATA PGS</div>
+              <div style="padding:4px 8px;color:#aaa;cursor:pointer">MAINT CTRL PGS</div>
+              <div style="padding:4px 8px;color:#aaa;cursor:pointer">ONBD MAINT</div>
+            </div>
+            <!-- Main menu bar -->
+            <div style="display:flex;gap:1px;background:#111;border-bottom:1px solid #333;font-size:0.58rem" id="mmb-bar">
+              <div class="mmb-btn" id="mmb-disp" onclick="setMMB('DISP')" style="padding:4px 8px;background:rgba(0,200,255,0.2);color:var(--accent);border:1px solid var(--accent);cursor:pointer;white-space:nowrap">DISPLAY SELECTION</div>
+              <div class="mmb-btn" id="mmb-print" onclick="setMMB('PRINT')" style="padding:4px 8px;color:#aaa;cursor:pointer;white-space:nowrap">PRINT SELECTION</div>
+              <div class="mmb-btn" id="mmb-dl" onclick="setMMB('DL')" style="padding:4px 8px;color:#aaa;cursor:pointer;white-space:nowrap">DATALINK SELECTION</div>
+              <div class="mmb-btn" id="mmb-erase" onclick="setMMB('ERASE')" style="padding:4px 8px;color:#aaa;cursor:pointer;white-space:nowrap">ERASE SELECTION</div>
+            </div>
+            <!-- System list table -->
+            <div style="padding:0.5rem;font-size:0.62rem">
+              <div style="display:grid;grid-template-columns:2rem 1fr auto auto auto;gap:1px;color:var(--accent);font-size:0.55rem;letter-spacing:1px;margin-bottom:4px">
+                <span></span><span>ATA SYSTEM</span><span>REAL</span><span>MANUAL</span><span>AUTO</span>
+              </div>
+              <div id="mmb-rows">
+                <!-- filled by JS -->
+              </div>
+            </div>
+          </div>
+          <div style="font-size:0.68rem;color:var(--muted);text-align:center;margin-top:4px;font-family:'Share Tech Mono',monospace">↑ Click the menu bar tabs above to switch function</div>
+        </div>
+
+        <div>
+          <div class="card" id="mmb-detail">
+            <div class="info-label" id="mmb-title">DISPLAY SELECTION</div>
+            <div id="mmb-body" style="font-size:0.88rem;line-height:1.6;color:var(--text)">
+              Allows the operator to <strong>display real-time data, manual snapshots, or auto snapshots</strong> of maintenance pages on screen.<br><br>
+              After selection, this function is highlighted in green on the menu bar. Pages are listed in ATA sequence.
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:1rem">
+            <div class="info-label">Key Rules</div>
+            <div class="info-row"><div class="bullet"></div>Selected menu function is <strong>highlighted green</strong></div>
+            <div class="info-row"><div class="bullet"></div>All pages displayed in <strong>ATA sequence</strong> across all menu pages</div>
+            <div class="info-row"><div class="bullet orange"></div><strong>DISPLAY</strong> prompt = one event in memory; <strong>SHOW LIST</strong> = 2–5 events</div>
+            <div class="info-row"><div class="bullet"></div>ERASE only available when <strong>aircraft is on the ground</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 15 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 15 — Display & Print Menus
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-15">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 16 of 21</div>
+      <div class="slide-title">MAS — Display &amp; Print Selection Menus</div>
+      <div class="slide-subtitle">How DISPLAY and PRINT prompts work depending on how many events are stored in memory</div>
+
+      <div class="two-col">
+        <div>
+          <!-- Display Selection mockup -->
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;overflow:hidden;margin-bottom:0.75rem">
+            <div style="background:rgba(0,200,255,0.1);border-bottom:1px solid rgba(0,200,255,0.2);padding:5px 10px;color:var(--accent);font-size:0.6rem;letter-spacing:1px">
+              ATA 21 — AIR CONDITIONING<br>
+              <span style="color:var(--muted)">DISPLAY SELECTION</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2rem 1fr auto auto auto;gap:0 6px;padding:6px 8px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04)">
+              <span style="color:var(--accent);font-size:0.55rem">21</span>
+              <span style="color:#ccc">AIR CONDITIONING</span>
+              <span style="background:#444;color:#fff;padding:2px 6px;border-radius:2px;cursor:pointer;font-size:0.6rem">DISPLAY</span>
+              <span style="background:#333;border:1px solid rgba(255,0,100,0.5);color:rgba(255,100,100,0.8);padding:2px 4px;border-radius:2px;font-size:0.6rem">SHOW LIST</span>
+              <span style="background:#333;border:1px solid rgba(255,0,100,0.5);color:rgba(255,100,100,0.8);padding:2px 4px;border-radius:2px;font-size:0.6rem">SHOW LIST</span>
+            </div>
+            <!-- Expanded SHOW LIST view -->
+            <div style="padding:6px 10px;border-top:1px solid rgba(0,200,255,0.15)">
+              <div style="color:var(--accent);font-size:0.55rem;text-align:center;margin-bottom:6px">MANUAL EVENTS DISPLAY SELECTION</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;color:#8af">
+                <div><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp; <span style="color:var(--muted)">UTP: </span>17:24:43</div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer">DISPLAY</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;color:#8af">
+                <div><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp; <span style="color:var(--muted)">UTP: </span>17:24:31</div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer">DISPLAY</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;color:#8af">
+                <div><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp; <span style="color:var(--muted)">UTP: </span>17:20:29</div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer">DISPLAY</span>
+              </div>
+              <div style="margin-top:6px;display:flex;justify-content:flex-start">
+                <span style="background:#333;color:#aaa;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer">PREV MENU</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto events -->
+          <div style="background:#000;border:1px solid rgba(255,190,11,0.2);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;overflow:hidden">
+            <div style="background:rgba(255,190,11,0.08);border-bottom:1px solid rgba(255,190,11,0.2);padding:5px 10px;color:var(--warning);font-size:0.6rem;letter-spacing:1px">
+              ATA 21 — AIR CONDITIONING &nbsp;|&nbsp; AUTO EVENTS DISPLAY SELECTION
+            </div>
+            <div style="padding:6px 10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <div><span style="color:var(--muted);font-size:0.6rem">MSG: </span><span style="color:#0f0">PACK OVERHEAT SHUTDOWN L</span><br>
+                <span style="color:var(--muted);font-size:0.6rem">DATE: </span><span>01 SEP 15 &nbsp;</span><span style="color:var(--muted);font-size:0.6rem">UTC: </span><span>18:09:55</span></div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer;flex-shrink:0;margin-left:8px">DISPLAY</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="color:var(--muted);font-size:0.6rem">MSG: </span><span style="color:#0f0">ZONE OVERHEAT SHUTDOWN</span><br>
+                <span style="color:var(--muted);font-size:0.6rem">DATE: </span><span>01 SEP 15 &nbsp;</span><span style="color:var(--muted);font-size:0.6rem">UTC: </span><span>18:09:55</span></div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer;flex-shrink:0;margin-left:8px">DISPLAY</span>
+              </div>
+              <div style="margin-top:6px"><span style="background:#333;color:#aaa;padding:2px 8px;border-radius:2px;font-size:0.6rem;cursor:pointer">PREV MENU</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">DISPLAY SELECTION — Logic</div>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <div class="step-title">DISPLAY prompt</div>
+                  <div class="step-desc">Shows for real-time data, OR when exactly <strong>one</strong> manual/auto snapshot is in memory</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <div class="step-title">SHOW LIST prompt</div>
+                  <div class="step-desc">Shows when there are <strong>2–5</strong> auto or manual events in memory</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <div class="step-title">Select SHOW LIST</div>
+                  <div class="step-desc">A sub-menu appears listing all events with date/time. Select DISPLAY to view any individual event</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <div class="step-title">PREV MENU</div>
+                  <div class="step-desc">Returns operator to the DISPLAY SELECTION menu page</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="info-label">PRINT SELECTION — Same Logic</div>
+            <div class="info-row"><div class="bullet"></div><strong>PRINT</strong> prompt instead of DISPLAY — sends page data to installed printer</div>
+            <div class="info-row"><div class="bullet"></div><strong>SHOW LIST</strong> appears for 2–5 events; then PRINT for each</div>
+            <div class="info-row"><div class="bullet orange"></div><strong>PRINT ALL</strong> soft key available on event list pages — prints all stored events at once</div>
+            <div class="info-row"><div class="bullet"></div>PREV MENU returns to PRINT SELECTION menu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 16 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 16 — Datalink & Erase Menus
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-16">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 17 of 21</div>
+      <div class="slide-title">MAS — Datalink &amp; Erase Selection Menus</div>
+      <div class="slide-subtitle">Downlinking maintenance data via ACARS and erasing stored events — both use the same SHOW LIST logic</div>
+
+      <div class="two-col">
+        <div>
+          <!-- Datalink menu -->
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;overflow:hidden;margin-bottom:0.75rem">
+            <div style="background:rgba(0,200,255,0.1);border-bottom:1px solid rgba(0,200,255,0.2);padding:5px 10px">
+              <div style="color:var(--accent);font-size:0.55rem;letter-spacing:1px">DATALINK SELECTION — ATA 21 AIR CONDITIONING</div>
+              <div style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:0 8px;margin-top:6px;align-items:center;font-size:0.62rem;color:var(--muted)">
+                <span>21</span><span style="color:#ccc">AIR CONDITIONING</span>
+                <span style="background:#444;color:#fff;padding:2px 6px;border-radius:2px">SEND</span>
+                <span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:2px 4px;border-radius:2px">SHOW LIST</span>
+                <span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:2px 4px;border-radius:2px">SHOW LIST</span>
+              </div>
+            </div>
+            <div style="padding:6px 10px;font-size:0.6rem">
+              <div style="color:var(--accent);text-align:center;margin-bottom:4px">AUTO EVENTS SEND SELECTION</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <div><span style="color:var(--muted)">MSG: </span><span style="color:#0f0">PACK OVERHEAT SHUTDOWN L</span><br>
+                <span style="color:var(--muted)">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted)">UTC: </span>18:09:54</div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;cursor:pointer;flex-shrink:0;margin-left:6px">SEND</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="color:var(--muted)">MSG: </span><span style="color:#0f0">ZONE OVERHEAT SHUTDOWN</span><br>
+                <span style="color:var(--muted)">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted)">UTC: </span>18:09:54</div>
+                <span style="background:#555;color:#fff;padding:2px 8px;border-radius:2px;cursor:pointer;flex-shrink:0;margin-left:6px">SEND</span>
+              </div>
+              <div style="margin-top:6px;display:flex;justify-content:space-between">
+                <span style="background:#333;color:#aaa;padding:2px 8px;border-radius:2px;font-size:0.6rem">PREV MENU</span>
+                <span style="background:#333;color:#aaa;padding:2px 8px;border-radius:2px;font-size:0.6rem">SEND ALL</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Erase menu -->
+          <div style="background:#000;border:1px solid rgba(255,68,68,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.65rem;overflow:hidden">
+            <div style="background:rgba(255,68,68,0.08);border-bottom:1px solid rgba(255,68,68,0.2);padding:5px 10px">
+              <div style="color:var(--danger);font-size:0.55rem;letter-spacing:1px">ERASE SELECTION — ATA 21 AIR CONDITIONING</div>
+              <div style="display:grid;grid-template-columns:auto 1fr auto auto;gap:0 8px;margin-top:6px;align-items:center;font-size:0.62rem">
+                <span style="color:var(--accent)">21</span><span style="color:#ccc">AIR CONDITIONING</span>
+                <span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:2px 4px;border-radius:2px">SHOW LIST</span>
+                <span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:2px 4px;border-radius:2px">SHOW LIST</span>
+              </div>
+            </div>
+            <div style="padding:6px 10px;font-size:0.6rem">
+              <div style="color:var(--danger);text-align:center;margin-bottom:4px">AUTO EVENTS ERASE SELECTION</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <div><span style="color:var(--muted)">MSG: </span><span style="color:#0f0">PACK OVERHEAT SHUTDOWN L</span><br>
+                <span style="color:var(--muted)">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted)">UTC: </span>18:09:54</div>
+                <span style="background:rgba(255,68,68,0.2);border:1px solid var(--danger);color:var(--danger);padding:2px 8px;border-radius:2px;cursor:pointer;flex-shrink:0;margin-left:6px">ERASE</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div><span style="color:var(--muted)">MSG: </span><span style="color:#0f0">ZONE OVERHEAT SHUTDOWN</span><br>
+                <span style="color:var(--muted)">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted)">UTC: </span>18:09:54</div>
+                <span style="background:rgba(255,68,68,0.2);border:1px solid var(--danger);color:var(--danger);padding:2px 8px;border-radius:2px;cursor:pointer;flex-shrink:0;margin-left:6px">ERASE</span>
+              </div>
+              <div style="margin-top:6px;display:flex;justify-content:space-between">
+                <span style="background:#333;color:#aaa;padding:2px 8px;border-radius:2px;font-size:0.6rem">PREV MENU</span>
+                <span style="background:rgba(255,68,68,0.2);border:1px solid var(--danger);color:var(--danger);padding:2px 8px;border-radius:2px;font-size:0.6rem">ERASE ALL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">DATALINK SELECTION</div>
+            <div class="info-row"><div class="bullet"></div><strong>SEND</strong> prompt = one event in memory or real-time data</div>
+            <div class="info-row"><div class="bullet"></div><strong>SHOW LIST</strong> = 2–5 events; select SEND for individual pages</div>
+            <div class="info-row"><div class="bullet orange"></div>Uses <strong>ACARS</strong> to transmit page data to ground stations</div>
+            <div class="info-row"><div class="bullet"></div><strong>SEND ALL</strong> downlinks all stored events at once</div>
+            <div class="info-row"><div class="bullet"></div>PREV MENU returns to DATALINK SELECTION</div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">ERASE SELECTION</div>
+            <div class="callout warn" style="margin-top:0">
+              <span class="callout-icon">⚠</span>
+              <span>Events <strong>cannot be erased</strong> when the airplane is in the air — ground only.</span>
+            </div>
+            <div class="info-row" style="margin-top:0.5rem"><div class="bullet"></div><strong>ERASE</strong> prompt = one event; <strong>SHOW LIST</strong> = 2–5 events</div>
+            <div class="info-row"><div class="bullet"></div><strong>ERASE ALL</strong> — removes all manual AND auto events from memory</div>
+            <div class="info-row"><div class="bullet orange"></div>SHOW LIST in MANUAL column → lists manual events only; in AUTO column → auto events only</div>
+            <div class="info-row"><div class="bullet"></div>PREV MENU returns to ERASE SELECTION menu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 17 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 17 — Manual & Auto Events
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-17">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 18 of 21</div>
+      <div class="slide-title">MAS — Manual Events &amp; Auto Events</div>
+      <div class="slide-subtitle">Understanding snapshot events — how they are stored, labelled, and displayed</div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="info-label">Manual Events (MAN)</div>
+          <div class="info-row"><div class="bullet"></div>Created when operator presses <strong>RECORD</strong> on the footer menu</div>
+          <div class="info-row"><div class="bullet"></div>DPCs store up to <strong>5 manual snapshots</strong> per system</div>
+          <div class="info-row"><div class="bullet orange"></div>Title shows <strong>"MAN"</strong> next to the system name (e.g. AIR CONDITIONING MAN)</div>
+          <div class="info-row"><div class="bullet"></div>Date/time shown = <strong>when the event was recorded</strong></div>
+          <div class="info-row"><div class="bullet"></div>PREV MENU prompt returns to DISPLAY SELECTION menu</div>
+
+          <div class="info-label" style="margin-top:1rem">Manual Event List Example</div>
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.2);border-radius:4px;padding:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem">
+            <div style="color:var(--accent);text-align:center;margin-bottom:6px;font-size:0.6rem">ATA 21 AIR CONDITIONING<br>MANUAL EVENTS DISPLAY SELECTION</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+              <span style="color:#8af"><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp;<span style="color:var(--muted)">UTP: </span>17:24:43</span>
+              <span style="background:#555;color:#fff;padding:1px 6px;border-radius:2px;font-size:0.58rem">DISPLAY</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+              <span style="color:#8af"><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp;<span style="color:var(--muted)">UTP: </span>17:24:31</span>
+              <span style="background:#555;color:#fff;padding:1px 6px;border-radius:2px;font-size:0.58rem">DISPLAY</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0">
+              <span style="color:#8af"><span style="color:var(--muted)">DATE: </span>03 SEP 15 &nbsp;<span style="color:var(--muted)">UTP: </span>17:20:29</span>
+              <span style="background:#555;color:#fff;padding:1px 6px;border-radius:2px;font-size:0.58rem">DISPLAY</span>
+            </div>
+            <div style="margin-top:6px"><span style="background:#333;color:#aaa;padding:1px 6px;border-radius:2px;font-size:0.55rem">PREV MENU</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="info-label">Auto Events (AUTO)</div>
+          <div class="info-row"><div class="bullet"></div>Generated <strong>automatically</strong> when a system exceedance occurs</div>
+          <div class="info-row"><div class="bullet"></div>DPCs store up to <strong>5 auto events</strong> per system</div>
+          <div class="info-row"><div class="bullet orange"></div>Title shows <strong>"AUTO"</strong> next to system name (e.g. AIR CONDITIONING AUTO)</div>
+          <div class="info-row"><div class="bullet"></div>In real-time mode: the <strong>most recent auto event message</strong> shows (blank if none)</div>
+          <div class="info-row"><div class="bullet orange"></div>In auto event mode: <strong>message for the specific incident</strong> shows</div>
+          <div class="info-row"><div class="bullet"></div>Date/time = <strong>time the auto event was recorded</strong></div>
+
+          <div class="info-label" style="margin-top:1rem">Auto Event List Example</div>
+          <div style="background:#000;border:1px solid rgba(255,190,11,0.2);border-radius:4px;padding:0.5rem;font-family:'Share Tech Mono',monospace;font-size:0.65rem">
+            <div style="color:var(--warning);text-align:center;margin-bottom:6px;font-size:0.6rem">ATA 21 AIR CONDITIONING<br>AUTO EVENTS DISPLAY SELECTION</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div>
+                <div><span style="color:var(--muted);font-size:0.58rem">MSG: </span><span style="color:#0f0">PACK OVERHEAT SHUTDOWN L</span></div>
+                <div><span style="color:var(--muted);font-size:0.58rem">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted);font-size:0.58rem">UTC: </span>18:09:55</div>
+              </div>
+              <span style="background:#555;color:#fff;padding:1px 8px;border-radius:2px;font-size:0.58rem;flex-shrink:0;margin-left:6px">DISPLAY</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div><span style="color:var(--muted);font-size:0.58rem">MSG: </span><span style="color:#0f0">ZONE OVERHEAT SHUTDOWN</span></div>
+                <div><span style="color:var(--muted);font-size:0.58rem">DATE: </span>01 SEP 15 &nbsp;<span style="color:var(--muted);font-size:0.58rem">UTC: </span>18:09:55</div>
+              </div>
+              <span style="background:#555;color:#fff;padding:1px 8px;border-radius:2px;font-size:0.58rem;flex-shrink:0;margin-left:6px">DISPLAY</span>
+            </div>
+            <div style="margin-top:6px"><span style="background:#333;color:#aaa;padding:1px 6px;border-radius:2px;font-size:0.55rem">PREV MENU</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 18 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 18 — Air Conditioning Data Page
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-18">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 19 of 21</div>
+      <div class="slide-title">MAS — Air Conditioning Data Page (ATA 21)</div>
+      <div class="slide-subtitle">Environmental Control System maintenance data — real-time, manual, and auto display modes</div>
+
+      <div class="two-col">
+        <div>
+          <!-- Realistic ATA 21 AC maintenance page -->
+          <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;overflow:hidden">
+            <div style="display:flex;gap:1px;background:#111;border-bottom:1px solid #333;font-size:0.55rem;padding:2px">
+              <div style="padding:3px 6px;color:#aaa">SYS MENU</div>
+              <div style="padding:3px 6px;color:#aaa">STATUS</div>
+              <div style="padding:3px 6px;background:rgba(0,200,255,0.15);color:var(--accent);border:1px solid rgba(0,200,255,0.4)">MAINT DATA PGS</div>
+              <div style="padding:3px 6px;color:#aaa">MAINT CTRL PGS</div>
+            </div>
+            <div style="padding:6px 10px">
+              <div style="text-align:center;margin-bottom:6px">
+                <span style="color:var(--accent)">AIR CONDITIONING</span>
+                <span id="ac-mode-label" style="color:#0f0;margin-left:8px"></span>
+              </div>
+              <div style="font-size:0.55rem;color:var(--muted);margin-bottom:4px">US STANDARD UNITS &nbsp;|&nbsp; <span style="color:var(--accent3)">TRIM AIR: ON</span></div>
+
+              <!-- Zone temps -->
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0;font-size:0.58rem;margin-bottom:4px">
+                <span style="color:var(--accent)"></span><span style="color:var(--accent)">CONT CAB</span><span style="color:var(--accent)">FORWARD</span><span style="color:var(--accent)">AFT</span>
+                <span style="color:var(--muted)">SELECTOR TEMP</span><span id="ac-st-cc">85</span><span id="ac-st-fw">75</span><span id="ac-st-af">65</span>
+                <span style="color:var(--muted)">ZONE TEMP</span><span id="ac-zt-cc">82</span><span id="ac-zt-fw">75</span><span id="ac-zt-af">65</span>
+                <span style="color:var(--muted)">ZONE DUCT TEMP</span><span>130</span><span>90</span><span>70</span>
+                <span style="color:var(--muted)">ZONE TRIM VLV</span><span>MODULATING</span><span>CLOSED</span><span>CLOSED</span>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,0.08);margin:4px 0;padding-top:4px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;font-size:0.58rem">
+                <span style="color:var(--accent)"></span><span style="color:var(--accent)">LEFT</span><span style="color:var(--accent)">RIGHT</span>
+                <span style="color:var(--muted)">PACK MODE</span><span id="ac-pm-l">NORMAL</span><span id="ac-pm-r">NORMAL</span>
+                <span style="color:var(--muted)">PACK INLET TEMP</span><span id="ac-pit-l">389</span><span>375</span>
+                <span style="color:var(--muted)">PACK INLET PRESS</span><span>17</span><span>27</span>
+                <span style="color:var(--muted)">PACK SENSOR TEMP</span><span>145</span><span id="ac-pst-r">140</span>
+                <span style="color:var(--muted)">MIX MANIFOLD TEMP</span><span>78</span><span>78</span>
+                <span style="color:var(--muted)">PRI HX OUTLET TEMP</span><span>210</span><span>200</span>
+                <span style="color:var(--muted)">PACK TCV POSITION</span><span>MODULATING</span><span>OPEN</span>
+                <span style="color:var(--muted)">STBY TCV DRIVE(mA)</span><span>0</span><span>0</span>
+                <span style="color:var(--muted)">PACK FLOW (LB/MIN)</span><span>72</span><span>64</span>
+                <span style="color:var(--muted)">PACK FCV</span><span>MODULATING</span><span>MODULATING</span>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,0.08);margin:4px 0;padding-top:4px;font-size:0.58rem">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+                  <span style="color:var(--muted)">STATIC AIR TEMP (°C)</span><span style="color:var(--accent3)">+15.0</span>
+                  <span style="color:var(--muted)">CABIN ALTITUDE</span><span>0</span>
+                  <span style="color:var(--muted)">ALTITUDE</span><span>18</span>
+                  <span style="color:var(--muted)">PACK FLOW SCHEDULE</span><span>12</span>
+                </div>
+              </div>
+              <div id="ac-timestamp" style="text-align:right;font-size:0.55rem;color:var(--muted);margin-top:4px"></div>
+              <!-- Footer -->
+              <div style="display:flex;gap:3px;margin-top:6px;border-top:1px solid #333;padding-top:4px;flex-wrap:wrap">
+                <span style="background:#333;color:#aaa;padding:2px 5px;border-radius:2px;font-size:0.55rem">PREV MENU</span>
+                <span style="background:#444;color:#fff;padding:2px 5px;border-radius:2px;font-size:0.55rem">PRINT</span>
+                <span style="background:#444;color:#fff;padding:2px 5px;border-radius:2px;font-size:0.55rem">SEND</span>
+                <span style="background:#444;color:#fff;padding:2px 5px;border-radius:2px;font-size:0.55rem">RECORD</span>
+                <span style="background:#333;color:var(--accent);padding:2px 5px;border-radius:2px;font-size:0.55rem">PREV PAGE</span>
+                <span style="background:#333;color:var(--accent);padding:2px 5px;border-radius:2px;font-size:0.55rem">NEXT PAGE</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+            <button class="mfd-btn" onclick="setACMode('REAL')" id="ac-real" style="font-size:0.65rem;padding:4px 10px;background:rgba(0,200,255,0.2);border-color:var(--accent);color:var(--accent)">REAL</button>
+            <button class="mfd-btn" onclick="setACMode('MAN')" id="ac-man" style="font-size:0.65rem;padding:4px 10px">MAN</button>
+            <button class="mfd-btn" onclick="setACMode('AUTO')" id="ac-auto" style="font-size:0.65rem;padding:4px 10px">AUTO</button>
+            <span style="font-size:0.7rem;color:var(--muted);align-self:center">← switch display mode</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="info-label">Three Display Modes</div>
+            <div class="steps">
+              <div class="step">
+                <div class="step-num" style="background:rgba(0,255,157,0.1);border-color:var(--accent3);color:var(--accent3)">R</div>
+                <div class="step-content">
+                  <div class="step-title">REAL — real-time data</div>
+                  <div class="step-desc">Title: "AIR CONDITIONING". Date field shows current date/UTC.</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">M</div>
+                <div class="step-content">
+                  <div class="step-title">MANUAL — manually recorded</div>
+                  <div class="step-desc">Title: "AIR CONDITIONING MAN". Date = when event was recorded.</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num" style="background:rgba(255,190,11,0.1);border-color:var(--warning);color:var(--warning)">A</div>
+                <div class="step-content">
+                  <div class="step-title">AUTO — auto recorded</div>
+                  <div class="step-desc">Title: "AIR CONDITIONING AUTO". Triggered by system exceedance.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="info-label">Data Displayed (ATA 21)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;font-size:0.82rem">
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Selector temperatures</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Zone temperatures</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Zone duct temperatures</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Zone trim valve position</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Pack mode</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Pack inlet pressure/temp</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet"></div>Pack TCV position</div>
+              <div class="info-row" style="grid-column:span 1"><div class="bullet orange"></div>Pack flow (lb/min)</div>
+              <div class="info-row" style="grid-column:span 2"><div class="bullet"></div>Static air temp, cabin altitude, altitude, pack flow schedule</div>
+            </div>
+            <div class="info-label" style="margin-top:0.75rem">Footer Functions</div>
+            <div class="info-row"><div class="bullet"></div><strong>RECORD</strong> — creates a manual event snapshot</div>
+            <div class="info-row"><div class="bullet"></div><strong>SEND</strong> — transmits via ACARS to ground station</div>
+            <div class="info-row"><div class="bullet orange"></div>PREV/NEXT PAGE shown in <strong>cyan when only one page</strong> (inactive)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 19 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 19 — Flight Control & SMYD Pages
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-19">
+      <div class="slide-eyebrow">ATA 31-65-00 · Slide 20 of 21</div>
+      <div class="slide-title">MAS — Flight Control &amp; SMYD Data Pages</div>
+      <div class="slide-subtitle">ATA 27 maintenance pages — control surface positions, ground spoilers, and yaw damper system data</div>
+
+      <div class="tabs">
+        <div class="tab active-tab" onclick="switchTab(this,'fctl')">Flight Control (ATA 27)</div>
+        <div class="tab" onclick="switchTab(this,'smyd')">SMYD (ATA 27)</div>
+      </div>
+
+      <div class="tab-content active-tc" id="tc-fctl">
+        <div class="two-col">
+          <div>
+            <!-- Flight Control realistic page -->
+            <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:6px 8px;max-height:440px;overflow-y:auto">
+              <div style="text-align:center;color:var(--accent);margin-bottom:6px;font-size:0.62rem">FLIGHT CONTROL</div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px 4px;margin-bottom:4px">
+                <span style="color:var(--muted)">CAPT CTRL WHL</span><span style="color:var(--accent)">◄</span><span style="color:#fff">-0.5</span>
+                <span style="color:var(--muted)">COLUMN POSN</span><span style="color:var(--accent)">▲</span><span style="color:#fff">0.0</span>
+                <span style="color:var(--muted)">SCE FO CTRL WHL</span><span style="color:var(--accent)">◄</span><span style="color:#fff">0.0</span>
+                <span style="color:var(--muted)">SCE SPDBRK LVR</span><span></span><span style="color:#fff">1.3</span>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-bottom:4px">
+                <div style="color:var(--accent);font-size:0.55rem;margin-bottom:2px">GEAR ON GND &nbsp;&nbsp; WHL SPD</div>
+                <div style="display:grid;grid-template-columns:auto auto auto auto;gap:1px 6px;color:#fff">
+                  <span style="color:var(--muted)">L1</span><span style="color:var(--accent3)">NEAR</span>
+                  <span style="color:var(--muted)">L/I&lt;60</span><span style="color:var(--accent3)">L/O&lt;60</span>
+                  <span style="color:var(--muted)">L2</span><span style="color:var(--accent3)">NEAR</span>
+                  <span style="color:var(--muted)">R/I&lt;60</span><span style="color:var(--accent3)">R/O&lt;60</span>
+                  <span style="color:var(--muted)">R1</span><span style="color:var(--accent3)">NEAR</span>
+                  <span style="color:var(--muted)">R2</span><span style="color:var(--accent3)">NEAR</span>
+                </div>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-bottom:4px">
+                <div style="color:var(--accent);font-size:0.55rem;margin-bottom:2px">LE SLATS / FLAPS &nbsp;(#1–#8)</div>
+                <div style="display:grid;grid-template-columns:1fr repeat(8,auto);gap:1px 4px;font-size:0.55rem">
+                  <span></span><span style="color:var(--muted)">#1</span><span style="color:var(--muted)">#2</span><span style="color:var(--muted)">#3</span><span style="color:var(--muted)">#4</span><span style="color:var(--muted)">#5</span><span style="color:var(--muted)">#6</span><span style="color:var(--muted)">#7</span><span style="color:var(--muted)">#8</span>
+                  <span style="color:var(--muted)">LE SLATS OUTBD</span><span style="color:var(--accent3)">NEAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span style="color:var(--accent3)">NEAR</span>
+                  <span style="color:var(--muted)">LE SLATS RET</span><span></span><span style="color:var(--accent3)">NEAR</span><span style="color:var(--accent3)">NEAR</span><span style="color:var(--accent3)">NEAR</span><span style="color:var(--accent3)">NEAR</span><span style="color:var(--accent3)">NEAR</span><span style="color:var(--accent3)">NEAR</span><span></span>
+                  <span style="color:var(--muted)">LE FLAPS EXT</span><span>FAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span>FAR</span><span></span><span></span><span></span>
+                  <span style="color:var(--muted)">FLAP SKEW SNSR</span><span>-55.7</span><span>-17.3</span><span>8.0</span><span>-17.8</span><span>-19.0</span><span>5.4</span><span>-20.5</span><span>-58.2</span>
+                </div>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-bottom:4px">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+                  <div>
+                    <div style="color:var(--accent);font-size:0.55rem">LEFT TE FLAPS</div>
+                    <div style="display:grid;grid-template-columns:auto 1fr;gap:1px 4px">
+                      <span style="color:var(--muted)">FSEU</span><span>2.0</span>
+                      <span style="color:var(--muted)">FCC</span><span>0.0</span>
+                      <span style="color:var(--muted)">SMYD</span><span>0.0</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="color:var(--accent);font-size:0.55rem">RIGHT TE FLAPS</div>
+                    <div style="display:grid;grid-template-columns:auto 1fr;gap:1px 4px">
+                      <span style="color:var(--muted)">FSEU</span><span>1.2</span>
+                      <span style="color:var(--muted)">FCC</span><span>0.0</span>
+                      <span style="color:var(--muted)">SMYD</span><span>0.0</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-bottom:4px">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px 4px">
+                  <span style="color:var(--accent)">▼ ELEVATOR</span><span></span><span style="color:#fff">-4.2</span>
+                  <span style="color:var(--accent)">▼ AILERONS</span><span></span><span style="color:#fff">-0.9</span>
+                  <span style="color:var(--accent)">▲ STABILIZER</span><span></span><span style="color:#fff">0.3</span>
+                </div>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-bottom:4px;font-size:0.55rem">
+                <div style="color:var(--accent);margin-bottom:2px">FLT SPLRS &nbsp;(#2–#11)</div>
+                <div style="display:grid;grid-template-columns:repeat(8,1fr)">
+                  <span style="color:var(--muted)">#2</span><span style="color:var(--muted)">#3</span><span style="color:var(--muted)">#4</span><span style="color:var(--muted)">#5</span><span style="color:var(--muted)">#8</span><span style="color:var(--muted)">#9</span><span style="color:var(--muted)">#10</span><span style="color:var(--muted)">#11</span>
+                  <span>0.5</span><span>0.5</span><span>0.6</span><span>0.5</span><span>0.4</span><span>0.6</span><span>0.5</span><span>0.5</span>
+                </div>
+              </div>
+
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;font-size:0.55rem">
+                <div style="color:var(--accent);margin-bottom:2px">GROUND SPOILERS &nbsp;|&nbsp; <span style="color:var(--muted)">CABIN PRESS: </span><span style="color:var(--warning)">HI</span></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr">
+                  <span style="color:var(--muted)">PRESSURE</span><span style="color:var(--accent3)">RET</span>
+                  <span style="color:var(--muted)">ARM SOV</span><span style="color:var(--accent3)">RET</span>
+                  <span style="color:var(--muted)">CTRL SOV</span><span style="color:var(--accent3)">RET</span>
+                  <span style="color:var(--muted)">RELAY CMD</span><span style="color:var(--accent3)">RET</span>
+                </div>
+              </div>
+
+              <div style="color:var(--muted);font-size:0.5rem;text-align:right;margin-top:4px">DATE 06 JAN 16 &nbsp; UTC 16:31:27</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="info-label">Flight Control Page — Data Shown</div>
+            <div class="info-row"><div class="bullet"></div>Control wheel, column, rudder pedal positions</div>
+            <div class="info-row"><div class="bullet"></div>Flap handle and speedbrake lever positions</div>
+            <div class="info-row"><div class="bullet"></div>Gear on ground (NEAR/FAR for each squat switch)</div>
+            <div class="info-row"><div class="bullet"></div>Wheel speed per gear assembly</div>
+            <div class="info-row"><div class="bullet orange"></div>LE slats (outbd, inbd) and LE flaps positions</div>
+            <div class="info-row"><div class="bullet"></div>Trailing edge flap positions (FSEU / FCC / SMYD)</div>
+            <div class="info-row"><div class="bullet"></div>Elevator, ailerons, stabilizer deflections</div>
+            <div class="info-row"><div class="bullet orange"></div>Flight spoiler positions (#2–#11)</div>
+            <div class="info-row"><div class="bullet"></div>Ground spoiler pressure, ctrl/arm solenoid cmds</div>
+            <div class="info-row"><div class="bullet"></div>Cabin pressure status</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tc-smyd">
+        <div class="two-col">
+          <div>
+            <!-- SMYD page realistic mockup -->
+            <div style="background:#000;border:1px solid rgba(0,200,255,0.3);border-radius:6px;font-family:'Share Tech Mono',monospace;font-size:0.58rem;padding:6px 8px;max-height:440px;overflow-y:auto">
+              <div style="text-align:center;color:var(--accent);margin-bottom:6px;font-size:0.62rem">STALL MANAGEMENT YAW DAMPER</div>
+              <div style="display:grid;grid-template-columns:1fr auto auto auto auto;gap:1px 4px;font-size:0.55rem;margin-bottom:6px">
+                <span style="color:var(--accent)">ANALOG DISCRETE INPUT</span><span style="color:var(--accent)">SMYD 1</span><span style="color:var(--accent)">SMYD 2</span>
+                <span style="color:var(--accent)">ANALOG INPUT</span><span style="color:var(--accent)">SMYD 1</span><span style="color:var(--accent)">SMYD 2</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr auto auto 12px 1fr auto auto;gap:1px 4px;font-size:0.55rem">
+                <span style="color:var(--muted)">AIR/GROUND</span><span style="color:var(--accent3)">GND</span><span style="color:var(--accent3)">GND</span><span></span>
+                <span style="color:var(--muted)">AOA SNSR</span><span style="color:var(--warning)">-2.8</span><span>3.0</span>
+
+                <span style="color:var(--muted)">NLG SQUAT</span><span style="color:var(--accent3)">GND</span><span style="color:var(--accent3)">GND</span><span></span>
+                <span style="color:var(--muted)">FLAP SNSR</span><span>0.0</span><span>0.0</span>
+
+                <span style="color:var(--muted)">FLAP UP DISCRETE</span><span>UP</span><span>UP</span><span></span>
+                <span style="color:var(--muted)">YD LVDT</span><span>0.0</span><span>0.1</span>
+
+                <span style="color:var(--muted)">FLT CONT B SW ON</span><span>OFF</span><span>OFF</span><span></span>
+                <span style="color:var(--muted)">WHEEL SNSR</span><span>--</span><span style="color:var(--warning)">-0.7</span>
+
+                <span style="color:var(--muted)">YD ENGAGE REQUEST</span><span style="color:var(--accent3)">TRUE</span><span style="color:var(--accent3)">TRUE</span><span></span><span></span><span></span><span></span>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-top:4px;font-size:0.55rem">
+                <div style="color:var(--accent);margin-bottom:3px">PROGRAM PINS &amp; DISCRETES</div>
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:1px 6px">
+                  <span style="color:var(--muted)">MLG DOWN</span><span style="color:var(--accent3)">GND</span><span style="color:var(--accent3)">GND</span>
+                  <span style="color:var(--muted)">AUTOSLAT POWER</span><span style="color:var(--accent3)">PRESENT</span><span style="color:var(--accent3)">PRESENT</span>
+                  <span style="color:var(--muted)">STICK SHAKER POWER</span><span style="color:var(--accent3)">PRESENT</span><span style="color:var(--accent3)">PRESENT</span>
+                  <span style="color:var(--muted)">YD POWER IN</span><span style="color:var(--accent3)">PRESENT</span><span style="color:var(--accent3)">PRESENT</span>
+                  <span style="color:var(--muted)">SPDBRK RETRACT POS</span><span>FALSE</span><span>FALSE</span>
+                </div>
+              </div>
+              <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:4px;margin-top:4px;font-size:0.55rem">
+                <div style="color:var(--accent);margin-bottom:3px">SYS INPUT BUS STATUS</div>
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:1px 6px">
+                  <span style="color:var(--muted)">ON SIDE IR</span><span style="color:var(--accent3)">ACTIVE</span><span style="color:var(--accent3)">ACTIVE</span>
+                  <span style="color:var(--muted)">OFF SIDE IR</span><span style="color:var(--accent3)">ACTIVE</span><span style="color:var(--accent3)">ACTIVE</span>
+                  <span style="color:var(--muted)">ON SIDE ADR</span><span style="color:var(--accent3)">ACTIVE</span><span style="color:var(--accent3)">ACTIVE</span>
+                  <span style="color:var(--muted)">DFCS MCP</span><span style="color:var(--accent3)">ACTIVE</span><span style="color:var(--accent3)">ACTIVE</span>
+                  <span style="color:var(--muted)">CROSS CHAN</span><span style="color:var(--accent3)">ACTIVE</span><span style="color:var(--accent3)">ACTIVE</span>
+                </div>
+              </div>
+              <div style="color:var(--muted);font-size:0.5rem;text-align:right;margin-top:4px">DATE 06 JAN 16 &nbsp; UTC 16:31:53</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="info-label">SMYD Page — Data Shown</div>
+            <div class="info-row"><div class="bullet"></div><strong>Analog discrete inputs</strong> — air/ground, NLG squat, flap up discrete, YD engage</div>
+            <div class="info-row"><div class="bullet"></div><strong>SMYD 1 and SMYD 2 status</strong> shown side-by-side for all parameters</div>
+            <div class="info-row"><div class="bullet orange"></div><strong>Analog inputs</strong> — AOA sensor, flap sensor, YD LVDT, wheel sensor values</div>
+            <div class="info-row"><div class="bullet"></div><strong>System Input Bus status</strong> — on/off-side IR, ADR, DFCS MCP, cross channel</div>
+            <div class="info-row"><div class="bullet"></div>Program pins (0–10), parity, asymmetry enable</div>
+            <div class="info-row"><div class="bullet orange"></div>Available in REAL, MAN, and AUTO display modes</div>
+            <div class="callout info" style="margin-top:0.75rem">
+              <span class="callout-icon">ℹ</span>
+              <span>SMYD = Stall Management Yaw Damper. Two computers (SMYD 1 & 2) provide redundant monitoring.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="nextSlide()">Next →</button>
+        <div class="slide-counter">Slide 20 / 21</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════
+         SLIDE 20 — Knowledge Check
+    ═══════════════════════════════════════════════ -->
+    <div class="slide" id="slide-20">
+      <div class="slide-eyebrow">Assessment · Slide 21 of 21</div>
+      <div class="slide-title">Knowledge Check</div>
+      <div class="slide-subtitle">Test your understanding of all MDS Maintenance Awareness modules — answer all questions then submit</div>
+
+      <div id="quiz-container">
+        <div id="q-wrap-0" class="quiz-wrap">
+          <div class="quiz-q">Q1. Which switch on the Multi-Function Panel is used to select the Systems Format?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(0,0,'wrong')"><span class="opt-letter">A</span>MFD-ENG switch</div>
+            <div class="quiz-option" onclick="answer(0,1,'correct')"><span class="opt-letter">B</span>MFD-SYS switch</div>
+            <div class="quiz-option" onclick="answer(0,2,'wrong')"><span class="opt-letter">C</span>MFD-INFO switch</div>
+            <div class="quiz-option" onclick="answer(0,3,'wrong')"><span class="opt-letter">D</span>ENG TFR switch</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-0-correct">✓ Correct! The MFD-SYS switch selects the Systems Format on the Multi-Function Panel.</div>
+          <div class="quiz-feedback bad" id="qf-0-wrong">✗ Incorrect. The MFD-SYS (multifunction display - systems) switch is used to select the Systems Format.</div>
+        </div>
+
+        <div id="q-wrap-1" class="quiz-wrap">
+          <div class="quiz-q">Q2. What does a CYAN diamond next to a menu item on the N1/SPD REF SET page indicate?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(1,0,'wrong')"><span class="opt-letter">A</span>The item is enabled and selectable</div>
+            <div class="quiz-option" onclick="answer(1,2,'correct')"><span class="opt-letter">B</span>The item is not enabled and not selectable</div>
+            <div class="quiz-option" onclick="answer(1,1,'wrong')"><span class="opt-letter">C</span>The item requires a password</div>
+            <div class="quiz-option" onclick="answer(1,3,'wrong')"><span class="opt-letter">D</span>The item has been modified from default</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-1-correct">✓ Correct! A cyan diamond means the menu item is not enabled and not selectable.</div>
+          <div class="quiz-feedback bad" id="qf-1-wrong">✗ Incorrect. A cyan diamond = NOT enabled and NOT selectable. A gray diamond = selectable.</div>
+        </div>
+
+        <div id="q-wrap-2" class="quiz-wrap">
+          <div class="quiz-q">Q3. With the DISPLAYS-SOURCE switch in ALL ON 1, which PFD message appears?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(2,0,'wrong')"><span class="opt-letter">A</span>DSPLY SOURCE 1</div>
+            <div class="quiz-option" onclick="answer(2,1,'correct')"><span class="opt-letter">B</span>DSPLY SOURCE 2</div>
+            <div class="quiz-option" onclick="answer(2,2,'wrong')"><span class="opt-letter">C</span>DISPLAYS CONTROL PANEL</div>
+            <div class="quiz-option" onclick="answer(2,3,'wrong')"><span class="opt-letter">D</span>No message appears</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-2-correct">✓ Correct! ALL ON 1 → DPC 1 controls all DUs, DPC 2 not supplying data → DSPLY SOURCE 2 message.</div>
+          <div class="quiz-feedback bad" id="qf-2-wrong">✗ Incorrect. In ALL ON 1, DPC 2 is unused → PFD shows DSPLY SOURCE 2 (the one NOT supplying data).</div>
+        </div>
+
+        <div id="q-wrap-3" class="quiz-wrap">
+          <div class="quiz-q">Q4. When does the MAINT light go out automatically?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(3,0,'wrong')"><span class="opt-letter">A</span>30 seconds after takeoff</div>
+            <div class="quiz-option" onclick="answer(3,1,'correct')"><span class="opt-letter">B</span>When the first engine starts</div>
+            <div class="quiz-option" onclick="answer(3,2,'wrong')"><span class="opt-letter">C</span>When the fault is acknowledged on STATUS MESSAGES</div>
+            <div class="quiz-option" onclick="answer(3,3,'wrong')"><span class="opt-letter">D</span>When the aircraft climbs above 10,000 feet</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-3-correct">✓ Correct! The MAINT light goes out when the first engine starts.</div>
+          <div class="quiz-feedback bad" id="qf-3-wrong">✗ Incorrect. The MAINT light goes out when the first engine starts. It comes back 30 sec after touchdown or when engines are off.</div>
+        </div>
+
+        <div id="q-wrap-4" class="quiz-wrap">
+          <div class="quiz-q">Q5. A SHOW LIST prompt appears on the maintenance data page when how many events are in memory?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(4,0,'wrong')"><span class="opt-letter">A</span>Exactly 1 event</div>
+            <div class="quiz-option" onclick="answer(4,1,'correct')"><span class="opt-letter">B</span>Between 2 and 5 events</div>
+            <div class="quiz-option" onclick="answer(4,2,'wrong')"><span class="opt-letter">C</span>6 or more events</div>
+            <div class="quiz-option" onclick="answer(4,3,'wrong')"><span class="opt-letter">D</span>When no events are in memory</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-4-correct">✓ Correct! SHOW LIST appears when there are 2–5 auto or manual events in memory.</div>
+          <div class="quiz-feedback bad" id="qf-4-wrong">✗ Incorrect. SHOW LIST appears when there are 2–5 events in memory. A single event shows a DISPLAY prompt directly.</div>
+        </div>
+
+        <div id="q-wrap-5" class="quiz-wrap">
+          <div class="quiz-q">Q6. How many manual snapshots can the DPC store per system?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(5,0,'wrong')"><span class="opt-letter">A</span>3</div>
+            <div class="quiz-option" onclick="answer(5,1,'wrong')"><span class="opt-letter">B</span>10</div>
+            <div class="quiz-option" onclick="answer(5,2,'correct')"><span class="opt-letter">C</span>5</div>
+            <div class="quiz-option" onclick="answer(5,3,'wrong')"><span class="opt-letter">D</span>28</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-5-correct">✓ Correct! The DPC stores up to 5 manual snapshots per system (and up to 5 auto events per system).</div>
+          <div class="quiz-feedback bad" id="qf-5-wrong">✗ Incorrect. The DPCs store up to 5 manual snapshots per system, and up to 5 auto events per system.</div>
+        </div>
+
+        <div id="q-wrap-6" class="quiz-wrap">
+          <div class="quiz-q">Q7. On a maintenance data page, which footer button creates a manual event snapshot?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(6,0,'wrong')"><span class="opt-letter">A</span>SEND</div>
+            <div class="quiz-option" onclick="answer(6,1,'wrong')"><span class="opt-letter">B</span>PRINT</div>
+            <div class="quiz-option" onclick="answer(6,2,'correct')"><span class="opt-letter">C</span>RECORD</div>
+            <div class="quiz-option" onclick="answer(6,3,'wrong')"><span class="opt-letter">D</span>ERASE</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-6-correct">✓ Correct! RECORD creates a manual event record (snapshot) of the current maintenance page data.</div>
+          <div class="quiz-feedback bad" id="qf-6-wrong">✗ Incorrect. RECORD creates a manual event. SEND transmits via ACARS, PRINT sends to printer, ERASE deletes events.</div>
+        </div>
+
+        <div id="q-wrap-7" class="quiz-wrap">
+          <div class="quiz-q">Q8. Can you erase maintenance events while the aircraft is airborne?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(7,0,'wrong')"><span class="opt-letter">A</span>Yes, at any time</div>
+            <div class="quiz-option" onclick="answer(7,1,'wrong')"><span class="opt-letter">B</span>Yes, but only auto events</div>
+            <div class="quiz-option" onclick="answer(7,2,'correct')"><span class="opt-letter">C</span>No — erase is only available on the ground</div>
+            <div class="quiz-option" onclick="answer(7,3,'wrong')"><span class="opt-letter">D</span>Yes, only above 10,000 feet</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-7-correct">✓ Correct! You cannot erase events when the airplane is in the air — ground only.</div>
+          <div class="quiz-feedback bad" id="qf-7-wrong">✗ Incorrect. Erase selection is not available when the aircraft is airborne — ground only.</div>
+        </div>
+
+        <div id="q-wrap-8" class="quiz-wrap">
+          <div class="quiz-q">Q9. What does the SEND function on a maintenance data page use to transmit data?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(8,0,'wrong')"><span class="opt-letter">A</span>VHF radio directly</div>
+            <div class="quiz-option" onclick="answer(8,1,'correct')"><span class="opt-letter">B</span>ACARS</div>
+            <div class="quiz-option" onclick="answer(8,2,'wrong')"><span class="opt-letter">C</span>USB port on the DPC</div>
+            <div class="quiz-option" onclick="answer(8,3,'wrong')"><span class="opt-letter">D</span>Satellite uplink only</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-8-correct">✓ Correct! SEND uses ACARS to transmit maintenance page data to ground stations.</div>
+          <div class="quiz-feedback bad" id="qf-8-wrong">✗ Incorrect. The SEND function uses ACARS to transmit page data to a ground station.</div>
+        </div>
+
+        <div id="q-wrap-9" class="quiz-wrap">
+          <div class="quiz-q">Q10. Which ATA system has the most maintenance data pages (19 pages)?</div>
+          <div class="quiz-options">
+            <div class="quiz-option" onclick="answer(9,0,'wrong')"><span class="opt-letter">A</span>ATA 21 — Air Conditioning</div>
+            <div class="quiz-option" onclick="answer(9,1,'wrong')"><span class="opt-letter">B</span>ATA 27 — Flight Control</div>
+            <div class="quiz-option" onclick="answer(9,2,'correct')"><span class="opt-letter">C</span>ATA 31 — MDS</div>
+            <div class="quiz-option" onclick="answer(9,3,'wrong')"><span class="opt-letter">D</span>ATA 71 — EPCS</div>
+          </div>
+          <div class="quiz-feedback good" id="qf-9-correct">✓ Correct! MDS (ATA 31) has 19 maintenance data pages — the most of any system.</div>
+          <div class="quiz-feedback bad" id="qf-9-wrong">✗ Incorrect. MDS (ATA 31) has 19 pages. PSEU has 2, EPCS has 4.</div>
+        </div>
+      </div>
+
+      <div id="completion-area" style="display:none">
+        <div class="completion-badge" style="margin-top:1.5rem">
+          <div class="completion-icon">🛫</div>
+          <div class="completion-title">Module Complete</div>
+          <div class="completion-sub">You have completed the Boeing 737 MAX MDS Maintenance Awareness module.<br>Score: <span id="final-score" style="color:var(--accent3);font-weight:700"></span></div>
+          <div style="margin-top:1rem;display:flex;gap:0.75rem;justify-content:center">
+            <button class="nav-btn" onclick="restartQuiz()">↺ Retry Quiz</button>
+            <button class="nav-btn" onclick="goSlide(0)">⤴ Back to Start</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-nav">
+        <button class="nav-btn" onclick="prevSlide()">← Previous</button>
+        <button class="nav-btn primary" onclick="checkQuiz()" id="submit-quiz">Submit Answers</button>
+        <div class="slide-counter">Slide 21 / 21</div>
+      </div>
+    </div>
+
+  </main>
+
+<script>
+const TOTAL = 21;
+const QUIZ_COUNT = 10;
+let current = 0;
+const seen = new Set([0]);
+const quizAnswers = {};
+let quizSubmitted = false;
+
+function updateProgress(){
+  const pct = Math.round((seen.size/TOTAL)*100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-label').textContent = seen.size+' / '+TOTAL;
+}
+
+function goSlide(n){
+  document.getElementById('slide-'+current).classList.remove('active');
+  document.querySelector('.nav-item[data-slide="'+current+'"]').classList.remove('active');
+  if(seen.has(current)){
+    document.querySelector('.nav-item[data-slide="'+current+'"]').classList.add('done');
+  }
+  current = n;
+  seen.add(n);
+  document.getElementById('slide-'+current).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.querySelector('.nav-item[data-slide="'+current+'"]').classList.add('active');
+  updateProgress();
+  // Slide-specific initialisers
+  if(n===14){ setTimeout(()=>{ renderMMBRows('DISP'); setMMB('DISP'); },50); }
+  if(n===18){ setTimeout(()=>{ setACMode('REAL'); },50); }
+}
+
+function nextSlide(){ if(current<TOTAL-1) goSlide(current+1); }
+function prevSlide(){ if(current>0) goSlide(current-1); }
+
+// ── Slide 0: SYS button toggle
+function toggleSysBtn(){
+  const btn = document.getElementById('sys-btn');
+  btn.classList.toggle('active-btn');
+}
+
+// ── Slide 1: Tabs
+function switchTab(el, id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active-tab'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active-tc'));
+  el.classList.add('active-tab');
+  document.getElementById('tc-'+id).classList.add('active-tc');
+}
+
+// ── Slide 3: INFO panel click
+const infoData = {
+  n1auto: {label:'N1 SET — AUTO', text:'When AUTO is selected (highlighted box), the Flight Management Computer automatically determines and sets the N1 thrust limits. The highlight box in the display shows the currently-focused item.'},
+  both: {label:'N1 SET — BOTH', text:'Allows manual N1 setting for BOTH engines simultaneously. A blue value box appears alongside; use the SELECTOR knob to dial in the required value.'},
+  eng1: {label:'N1 SET — ENG 1', text:'Manually set the N1 thrust limit for Engine 1 only. The dashes (--) indicate no value has been manually entered — it will follow the AUTO setting.'},
+  eng2: {label:'N1 SET — ENG 2', text:'Manually set the N1 thrust limit for Engine 2 only. Same logic as ENG 1 — dashes mean it follows AUTO.'},
+  set: {label:'N1 SET — SET', text:'Confirms and applies the manually-entered N1 values to the Engine Indication (EI) display. Must be selected after entering values.'},
+  spdauto: {label:'SPD REF — AUTO', text:'The FMS automatically populates speed reference values (V1, VR, VREF) based on weight and performance data. When in AUTO the individual speed items show cyan diamonds (not selectable).'},
+  v1: {label:'SPD REF — V1 (cyan)', text:'V1 is the take-off decision speed. The cyan diamond indicates it is NOT selectable — because SPD REF is in AUTO mode and the FMS is computing this value. Switch SPD REF to manual to enter V1.'},
+  vr: {label:'SPD REF — VR (cyan)', text:'VR is the rotation speed. Like V1, the cyan diamond indicates the FMS is computing it automatically. Not selectable in AUTO mode.'},
+  wt: {label:'SPD REF — WT (Gross Weight)', text:'Enter the aircraft gross weight in pounds. This is used by the FMS to compute performance-based speeds. Current value: 141,000 lb.'},
+  vref: {label:'SPD REF — VREF', text:'Reference approach speed. The highlighted grey box (70) shows the currently displayed value. Use the SELECTOR to adjust. This value also drives the VREF bug on the PFD speed tape.'},
+  spdset: {label:'SPD REF — SET', text:'Confirms and applies the speed reference values to the PFD speed reference bug and stores them. Must be selected after making changes.'},
+};
+function showInfo(key){
+  const d = infoData[key];
+  document.getElementById('info-panel-label').textContent = d.label;
+  document.getElementById('info-panel-text').innerHTML = '<span style="color:var(--text);font-size:0.88rem;line-height:1.6">'+d.text+'</span>';
+}
+
+// ── Slide 5: Mode switch
+function setMode(mode){
+  ['norm','outbd','inbd'].forEach(m=>{
+    document.getElementById('mode-'+m).style.borderColor='';
+    document.getElementById('mode-'+m).style.color='';
+  });
+  const outbdDU = document.getElementById('outbd-du');
+  const inbdDU = document.getElementById('inbd-du');
+  const desc = document.getElementById('mode-desc');
+  const outbdPFD = document.getElementById('outbd-pfd');
+  const outbdInner = document.getElementById('outbd-inner');
+  const inbdPFD = document.getElementById('inbd-pfd');
+  const inbdNav = document.getElementById('inbd-nav');
+
+  if(mode==='NORM'){
+    document.getElementById('mode-norm').style.borderColor='var(--accent3)';
+    document.getElementById('mode-norm').style.color='var(--accent3)';
+    outbdDU.className='du-box active-du'; outbdDU.style.display='flex';
+    inbdDU.className='du-box active-du'; inbdDU.style.display='flex';
+    outbdPFD.innerHTML='OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">PFD (full)</span>';
+    outbdInner.innerHTML='INBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">Engine Display</span>';
+    inbdPFD.innerHTML='PFD (full)<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span>';
+    inbdNav.innerHTML='NAV DISPLAY<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span>';
+    desc.innerHTML='<strong style="color:var(--accent3)">NORM:</strong> Normal operation — both inboard and outboard DUs show their standard displays.';
+  } else if(mode==='OUTBOARD'){
+    document.getElementById('mode-outbd').style.borderColor='var(--accent)';
+    document.getElementById('mode-outbd').style.color='var(--accent)';
+    outbdDU.className='du-box active-du'; outbdDU.style.display='flex';
+    inbdDU.className='du-box blank-du'; inbdDU.style.display='flex';
+    outbdPFD.innerHTML='OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--accent3)">Cropped PFD ◀</span>';
+    outbdInner.innerHTML='INBOARD HALF<br><span style="font-size:0.65rem;color:var(--accent)">Engine Display</span>';
+    inbdPFD.innerHTML='BLANK'; inbdNav.innerHTML='';
+    desc.innerHTML='<strong style="color:var(--accent)">OUTBOARD:</strong> Inboard DU goes blank. Outboard DU: outboard half shows cropped PFD; inboard half shows engine display format (or last shown format if engine display was not previously shown).';
+  } else {
+    document.getElementById('mode-inbd').style.borderColor='var(--accent2)';
+    document.getElementById('mode-inbd').style.color='var(--accent2)';
+    outbdDU.className='du-box blank-du'; outbdDU.style.display='flex';
+    inbdDU.className='du-box active-du'; inbdDU.style.display='flex';
+    outbdPFD.innerHTML='BLANK'; outbdInner.innerHTML='';
+    inbdPFD.innerHTML='Cropped PFD<br><span style="font-size:0.65rem;color:var(--accent3)">← Cropped</span>';
+    inbdNav.innerHTML='Engine Display<br><span style="font-size:0.65rem;color:var(--accent)">or last format</span>';
+    desc.innerHTML='<strong style="color:var(--accent2)">INBOARD:</strong> Outboard DU goes blank. Inboard DU shows cropped PFD and the engine display format (or whatever was last shown in place of it).';
+  }
+}
+
+// ── Slide 6: ENG toggle
+let engDecluttered = false;
+function toggleEng(){
+  engDecluttered = !engDecluttered;
+  const rows = document.querySelectorAll('.secondary-row');
+  const label = document.getElementById('eng-toggle-label');
+  rows.forEach(r=>{
+    r.style.display = engDecluttered ? 'none' : 'flex';
+  });
+  label.textContent = engDecluttered
+    ? 'Secondary data hidden (decluttered). FF still visible. Press ENG again to restore.'
+    : 'Press ENG to declutter secondary data';
+}
+
+// ── Slide 7: Quiz
+function answer(q, opt, result){
+  if(quizSubmitted) return;
+  const wrap = document.getElementById('q-wrap-'+q);
+  if(wrap.dataset.answered) return;
+  wrap.dataset.answered = 'true';
+  wrap.dataset.correct = (result==='correct').toString();
+  quizAnswers[q] = result==='correct';
+  const opts = wrap.querySelectorAll('.quiz-option');
+  opts[opt].classList.add(result);
+  opts.forEach((o,i)=>{ if(i!==opt) o.style.opacity='0.4'; });
+  document.getElementById('qf-'+q+'-'+result).classList.add('show');
+}
+
+function checkQuiz(){
+  const answered = Object.keys(quizAnswers).length;
+  if(answered < QUIZ_COUNT){
+    alert('Please answer all '+QUIZ_COUNT+' questions before submitting.');
+    return;
+  }
+  quizSubmitted = true;
+  const correct = Object.values(quizAnswers).filter(Boolean).length;
+  document.getElementById('final-score').textContent = correct+'/'+QUIZ_COUNT+' ('+Math.round(correct/QUIZ_COUNT*100)+'%)';
+  document.getElementById('completion-area').style.display='block';
+  document.getElementById('submit-quiz').disabled = true;
+  document.querySelector('.nav-item[data-slide="20"]').classList.add('done');
+}
+
+// ── Slide 14: Main Menu Bar interactive
+const mmbData = {
+  DISP: { title:'DISPLAY SELECTION', body:'Allows the operator to <strong>display real-time data, manual snapshots, or auto snapshots</strong> on screen. A DISPLAY prompt shows when one event is in memory; SHOW LIST appears for 2–5 events. After selection, this tab highlights green on the menu bar.' },
+  PRINT: { title:'PRINT SELECTION', body:'Allows the operator to <strong>print real-time data, manual or auto event snapshots</strong> to an installed printer. Same DISPLAY/SHOW LIST logic applies. PRINT ALL soft key is available on event list pages to print everything at once.' },
+  DL: { title:'DATALINK SELECTION', body:'Allows the operator to <strong>downlink real-time data or event snapshots to ground stations via ACARS</strong>. A SEND prompt appears for one event; SHOW LIST for 2–5 events. SEND ALL downlinks all stored events in one action.' },
+  ERASE: { title:'ERASE SELECTION', body:'Allows the operator to <strong>erase manual and auto event snapshots from DPC memory</strong>. Only available when the aircraft is on the ground. ERASE ALL removes all manual and auto events simultaneously. SHOW LIST separates manual and auto columns.' },
+};
+const ataRows = [
+  ['21','AIR CONDITIONING'],['27','FLIGHT CONTROL'],['27','SMYD'],['31','MDS'],
+  ['32','PSEU'],['36','AIR SUPPLY'],['49','APU'],['71','PERFORMANCE'],
+  ['71','EPCS'],['71','ENGINE 1 EXCEEDANCE'],['71','ENGINE 2 EXCEEDANCE']
+];
+function renderMMBRows(mode){
+  const container = document.getElementById('mmb-rows');
+  if(!container) return;
+  container.innerHTML = ataRows.map(([ata,sys])=>{
+    let cells = '';
+    if(mode==='DISP'){ cells=`<span style="background:#444;color:#fff;padding:1px 5px;border-radius:2px;font-size:0.6rem">DISPLAY</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span>`; }
+    else if(mode==='PRINT'){ cells=`<span style="background:#444;color:#fff;padding:1px 5px;border-radius:2px;font-size:0.6rem">PRINT</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span>`; }
+    else if(mode==='DL'){ cells=`<span style="background:#444;color:#fff;padding:1px 5px;border-radius:2px;font-size:0.6rem">SEND</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span><span style="background:#333;border:1px solid rgba(255,100,100,0.4);color:rgba(255,150,150,0.8);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span>`; }
+    else { cells=`<span></span><span style="background:rgba(255,68,68,0.15);border:1px solid var(--danger);color:var(--danger);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span><span style="background:rgba(255,68,68,0.15);border:1px solid var(--danger);color:var(--danger);padding:1px 4px;border-radius:2px;font-size:0.58rem">SHOW LIST</span>`; }
+    return `<div style="display:grid;grid-template-columns:2rem 1fr auto auto auto;gap:2px;align-items:center;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.6rem"><span style="color:var(--accent)">${ata}</span><span style="color:#ccc">${sys}</span>${cells}</div>`;
+  }).join('');
+}
+function setMMB(mode){
+  const btns = {'DISP':'mmb-disp','PRINT':'mmb-print','DL':'mmb-dl','ERASE':'mmb-erase'};
+  Object.values(btns).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.background='';el.style.color='#aaa';el.style.border='none';}
+  });
+  const active=document.getElementById(btns[mode]);
+  if(active){active.style.background='rgba(0,200,255,0.2)';active.style.color='var(--accent)';active.style.border='1px solid var(--accent)';}
+  const d=mmbData[mode];
+  document.getElementById('mmb-title').textContent=d.title;
+  document.getElementById('mmb-body').innerHTML=d.body;
+  renderMMBRows(mode);
+}
+
+// ── Slide 18: AC page mode switcher
+function setACMode(mode){
+  ['REAL','MAN','AUTO'].forEach(m=>{
+    const b=document.getElementById('ac-'+m.toLowerCase());
+    if(b){b.style.background='#2a2a2a';b.style.borderColor='#555';b.style.color='#ccc';}
+  });
+  const active=document.getElementById('ac-'+mode.toLowerCase());
+  if(active){active.style.background='rgba(0,200,255,0.2)';active.style.borderColor='var(--accent)';active.style.color='var(--accent)';}
+  const lbl=document.getElementById('ac-mode-label');
+  const ts=document.getElementById('ac-timestamp');
+  if(mode==='REAL'){ lbl.textContent=''; ts.textContent='DATE '+new Date().toDateString().toUpperCase()+' UTC '+new Date().toUTCString().slice(17,25); }
+  else if(mode==='MAN'){ lbl.textContent='MAN'; ts.textContent='DATE 03 SEP 15   UTC 17:24:43'; }
+  else { lbl.textContent='AUTO'; ts.textContent='DATE 01 SEP 15   UTC 18:09:55'; }
+}
+
+function restartQuiz(){
+  quizSubmitted=false;
+  Object.keys(quizAnswers).forEach(k=>delete quizAnswers[k]);
+  document.getElementById('completion-area').style.display='none';
+  document.getElementById('submit-quiz').disabled=false;
+  for(let q=0;q<QUIZ_COUNT;q++){
+    const wrap=document.getElementById('q-wrap-'+q);
+    if(!wrap) continue;
+    delete wrap.dataset.answered;
+    delete wrap.dataset.correct;
+    wrap.querySelectorAll('.quiz-option').forEach(o=>{
+      o.classList.remove('correct','wrong');
+      o.style.opacity='';
+    });
+    ['correct','wrong'].forEach(t=>{
+      const fb=document.getElementById('qf-'+q+'-'+t);
+      if(fb) fb.classList.remove('show');
+    });
+  }
+}
+
+// ── Slide 7: Source switch interactive
+function setSource(mode){
+  ['auto','1','2'].forEach(m=>{ const b=document.getElementById('src-'+m); if(b){b.style.borderColor='';b.style.color='';} });
+  const left=document.getElementById('src-left');
+  const right=document.getElementById('src-right');
+  const pfdMsg=document.getElementById('src-pfd-msg');
+  if(mode==='AUTO'){
+    document.getElementById('src-auto').style.borderColor='var(--accent3)';
+    document.getElementById('src-auto').style.color='var(--accent3)';
+    left.textContent='DPC 1 / GC A'; left.style.color='var(--accent3)';
+    right.textContent='DPC 2 / GC B'; right.style.color='var(--accent3)';
+    pfdMsg.style.display='none';
+  } else if(mode==='1'){
+    document.getElementById('src-1').style.borderColor='var(--accent)';
+    document.getElementById('src-1').style.color='var(--accent)';
+    left.textContent='DPC 1 / GC A+B (all)'; left.style.color='var(--accent)';
+    right.textContent='DPC 1 / GC A+B (all)'; right.style.color='var(--accent)';
+    pfdMsg.style.display='block'; pfdMsg.textContent='PFD: DSPLY SOURCE 2';
+  } else {
+    document.getElementById('src-2').style.borderColor='var(--accent2)';
+    document.getElementById('src-2').style.color='var(--accent2)';
+    left.textContent='DPC 2 / GC A+B (all)'; left.style.color='var(--accent2)';
+    right.textContent='DPC 2 / GC A+B (all)'; right.style.color='var(--accent2)';
+    pfdMsg.style.display='block'; pfdMsg.textContent='PFD: DSPLY SOURCE 1';
+  }
+}
+
+// ── Slide 9: Control panel switch
+function setCPanel(mode){
+  ['norm','1','2'].forEach(m=>{ const b=document.getElementById('cp-'+m); if(b){b.style.borderColor='';b.style.color='';} });
+  const left=document.getElementById('cp-left');
+  const right=document.getElementById('cp-right');
+  if(mode==='NORMAL'){
+    document.getElementById('cp-norm').style.borderColor='var(--accent3)'; document.getElementById('cp-norm').style.color='var(--accent3)';
+    left.textContent='CAPT EFIS CP'; left.style.color='var(--accent3)'; left.style.borderColor='rgba(0,255,157,0.4)';
+    right.textContent='F/O EFIS CP'; right.style.color='var(--accent2)'; right.style.borderColor='rgba(255,107,53,0.4)';
+  } else if(mode==='BOTH ON 1'){
+    document.getElementById('cp-1').style.borderColor='var(--accent)'; document.getElementById('cp-1').style.color='var(--accent)';
+    left.textContent='CAPT EFIS CP'; left.style.color='var(--accent)'; left.style.borderColor='rgba(0,200,255,0.4)';
+    right.textContent='CAPT EFIS CP'; right.style.color='var(--accent)'; right.style.borderColor='rgba(0,200,255,0.4)';
+  } else {
+    document.getElementById('cp-2').style.borderColor='var(--accent2)'; document.getElementById('cp-2').style.color='var(--accent2)';
+    left.textContent='F/O EFIS CP'; left.style.color='var(--accent2)'; left.style.borderColor='rgba(255,107,53,0.4)';
+    right.textContent='F/O EFIS CP'; right.style.color='var(--accent2)'; right.style.borderColor='rgba(255,107,53,0.4)';
+  }
+}
+
+// ── Slide 10: PFD messages
+const pfdMsgData = {
+  cp:   { title:'DISPLAYS CONTROL PANEL', body:'Amber message. Appears when an <strong>EFIS control panel has failed</strong>.<br><br>• Left control panel failure → message on <strong>Captain PFD</strong><br>• Right control panel failure → message on <strong>First Officer PFD</strong>' },
+  src1: { title:'DSPLY SOURCE 1', body:'Amber message on both Captain and F/O PFDs. Appears when <strong>DPC 1 is not supplying display data</strong>.<br><br>Causes:<br>• DPC 1 failure<br>• DISPLAYS-SOURCE switch moved to <strong>ALL ON 2</strong> position' },
+  src2: { title:'DSPLY SOURCE 2', body:'Amber message on both Captain and F/O PFDs. Appears when <strong>DPC 2 is not supplying display data</strong>.<br><br>Causes:<br>• DPC 2 failure<br>• DISPLAYS-SOURCE switch moved to <strong>ALL ON 1</strong> position' },
+};
+function showPfdMsg(key){
+  const d=pfdMsgData[key];
+  document.getElementById('pfd-panel-title').textContent=d.title;
+  document.getElementById('pfd-panel-body').innerHTML=d.body;
+  document.getElementById('pfd-mock-msg').textContent=d.title;
+}
+
+// ── Slide 11: MAINT light toggle
+let maintOn=true;
+function toggleMaintLight(){
+  maintOn=!maintOn;
+  const el=document.getElementById('maint-light');
+  const st=document.getElementById('maint-light-status');
+  if(maintOn){
+    el.style.background='#ffbe0b'; el.style.borderColor='#e0a800'; el.style.color='#000';
+    st.textContent='MAINT light ON — fault affecting airworthiness present';
+    st.style.color='var(--warning)';
+  } else {
+    el.style.background='#3a2000'; el.style.borderColor='#6a4000'; el.style.color='#6a4000';
+    st.textContent='MAINT light OFF — no airworthiness fault (or engine started)';
+    st.style.color='var(--muted)';
+  }
+}
+
+// ── Slide 12: MAS tab switch and status message click
+function setMasTab(tab){
+  if(tab==='STATUS'){
+    document.getElementById('status-tab').style.background='rgba(0,200,255,0.2)';
+    document.getElementById('status-tab').style.borderColor='var(--accent)';
+    document.getElementById('status-tab').style.color='var(--accent)';
+    document.getElementById('maintdata-tab').style.background='#1a1a1a';
+    document.getElementById('maintdata-tab').style.borderColor='#555';
+    document.getElementById('maintdata-tab').style.color='#aaa';
+    document.getElementById('mas-content-status').style.display='block';
+    document.getElementById('mas-content-maintdata').style.display='none';
+  } else {
+    document.getElementById('maintdata-tab').style.background='rgba(0,200,255,0.2)';
+    document.getElementById('maintdata-tab').style.borderColor='var(--accent)';
+    document.getElementById('maintdata-tab').style.color='var(--accent)';
+    document.getElementById('status-tab').style.background='#1a1a1a';
+    document.getElementById('status-tab').style.borderColor='#555';
+    document.getElementById('status-tab').style.color='#aaa';
+    document.getElementById('mas-content-status').style.display='none';
+    document.getElementById('mas-content-maintdata').style.display='block';
+    document.getElementById('mas-content-maintdata').innerHTML='<div style="color:var(--accent);font-size:0.6rem;letter-spacing:1px;margin-bottom:8px">MAINT DATA PGS — Select a system:</div><div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:0.72rem;line-height:1.8"><span style="color:var(--accent)">21</span><span>AIR CONDITIONING</span><span style="color:var(--accent)">27</span><span>FLIGHT CONTROL</span><span style="color:var(--accent)">27</span><span>SMYD</span><span style="color:var(--accent)">31</span><span>MDS (19 pages)</span><span style="color:var(--accent)">32</span><span>PSEU (2 pages)</span><span style="color:var(--accent)">36</span><span>AIR SUPPLY</span><span style="color:var(--accent)">49</span><span>APU</span><span style="color:var(--accent)">71</span><span>PERFORMANCE</span><span style="color:var(--accent)">71</span><span>EPCS (4 pages)</span><span style="color:var(--accent)">71</span><span>ENGINE 1 &amp; 2 EXCEEDANCE</span></div>';
+  }
+}
+const statusMsgInfo={
+  eng:{title:'ENG LPTACC VALVE L',body:'Engine Low Pressure Turbine Acceleration valve fault — left engine. This is an airworthiness item that must be repaired or deferred before flight.'},
+  apu:{title:'APU DOOR',body:'APU door position fault detected. PSEU (Proximity Sensing Electronic Unit) has detected an unexpected door position or proximity switch issue.'},
+  bleed:{title:'BLEED FAMV L',body:'Bleed Fan Air Modulating Valve fault — left side. Part of the Electronic Bleed Air System (EBAS). An airworthiness status message.'},
+  spoiler:{title:'SPOILER PAIR 4/9',body:'Spoiler control fault affecting spoiler pair 4 and 9. Controlled by the Spoiler Control Unit (SCU). Must be addressed before dispatch.'},
+  pack:{title:'PACK IASC COMM L',body:'Pack Integrated Air Supply Controller communication fault — left. The IASC manages the pneumatic air supply system. Communication loss is flagged as a status message.'},
+  pseu:{title:'PSEU COMM',body:'Proximity Sensing Electronic Unit (PSEU) communication fault. PSEU monitors proximity switches throughout the aircraft (doors, gear, thrust reversers, etc.).'},
+  dsply:{title:'DISPLAYS CONFIG DATA',body:'Display configuration data mismatch detected. The DPC has identified a configuration data discrepancy — may require config data reload or maintenance action.'},
+  sw:{title:'DISPLAYS SOFTWARE CONFIG',body:'Display software configuration fault. Software version mismatch or configuration error detected in the MDS software.'},
+  dpc:{title:'DPC 1',body:'Display Processor Computer 1 has a fault. DPC 1 normally drives the left outboard and left inboard display units. This is an airworthiness status item.'},
+};
+function showStatusInfo(key){
+  const d=statusMsgInfo[key];
+  const card=document.getElementById('status-info-card');
+  document.getElementById('status-info-title').textContent=d.title;
+  document.getElementById('status-info-body').textContent=d.body;
+  card.style.display='block';
+}
+
+updateProgress();
+</script>
+</body>
+</html>

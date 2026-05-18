@@ -1283,34 +1283,106 @@
     ═══════════════════════════════════════════════ -->
     <div class="slide" id="slide-5">
       <div class="slide-eyebrow">ATA 31-62-00 · Slide 6 of 21</div>
-      <div class="slide-title">Switching Modes — Interactive Demo</div>
-      <div class="slide-subtitle">Select each switch position to see how the Captain's display units reconfigure</div>
+      <div class="slide-title">Display Configuration — PFD/MFD Switch</div>
+      <div class="slide-subtitle">Captain Lighting Control Module — select each switch position to see how the DUs reconfigure</div>
 
+      <!-- Switch selector -->
       <div class="card" style="margin-bottom:1.25rem">
-        <div class="info-label">Captain Lighting Control Module — PFD/MFD Switch</div>
-        <div style="display:flex;gap:1rem;margin-top:0.5rem">
+        <div class="info-label">Captain Lighting Control Module — PFD/MFD Switch Position</div>
+        <div style="display:flex;gap:1rem;margin-top:0.5rem;flex-wrap:wrap">
           <button class="nav-btn" id="mode-norm" onclick="setMode('NORM')" style="border-color:var(--accent3);color:var(--accent3)">NORM</button>
-          <button class="nav-btn" id="mode-outbd" onclick="setMode('OUTBOARD')">OUTBOARD</button>
-          <button class="nav-btn" id="mode-inbd" onclick="setMode('INBOARD')">INBOARD</button>
+          <button class="nav-btn" id="mode-outbd" onclick="setMode('OUTBOARD')">OUTBD</button>
+          <button class="nav-btn" id="mode-inbd" onclick="setMode('INBOARD')">INBD</button>
         </div>
-        <div style="margin-top:0.75rem;font-size:0.85rem;color:var(--muted)" id="mode-desc">
-          <strong style="color:var(--accent3)">NORM:</strong> Normal operation — both inboard and outboard DUs show their standard displays.
+        <div style="margin-top:0.75rem;font-size:0.85rem;line-height:1.6" id="mode-desc">
+          <strong style="color:var(--accent3)">NORM:</strong> Normal operation. Each DU shows its standard full display.
         </div>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start">
+      <!-- DU visual layout: 3 column -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;align-items:start;margin-bottom:1.25rem">
+
+        <!-- LEFT OUTBOARD DU -->
         <div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT OUTBOARD DU</div>
-          <div class="du-box active-du" id="outbd-du" style="min-height:140px;flex-direction:column;gap:0.5rem">
-            <div id="outbd-pfd" style="width:100%;text-align:center;padding:0.3rem;border-bottom:1px solid rgba(0,255,157,0.2)">OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">PFD (cropped in OUTBD)</span></div>
-            <div id="outbd-inner" style="width:100%;text-align:center;padding:0.3rem">INBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">Engine Display</span></div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT OUTBOARD DU (Captain's side)</div>
+          <div id="outbd-du" style="background:#000;border:2px solid rgba(0,255,157,0.5);border-radius:6px;min-height:180px;display:flex;flex-direction:column;overflow:hidden;transition:all 0.4s">
+            <!-- Outboard half -->
+            <div id="outbd-top" style="flex:1;border-bottom:2px dashed rgba(255,255,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.5rem;gap:4px;min-height:80px">
+              <!-- PFD mini mockup -->
+              <div id="outbd-top-content" style="width:100%;text-align:center">
+                <div style="background:rgba(0,100,200,0.3);border:1px solid rgba(0,150,255,0.4);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem">
+                  <div style="color:#fff;font-weight:700">PFD</div>
+                  <div style="color:rgba(255,255,255,0.5);font-size:0.5rem">FULL</div>
+                  <div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0">
+                    <span>ALT</span><span>SPD</span><span>HDG</span>
+                  </div>
+                </div>
+                <div style="font-size:0.58rem;color:var(--accent3);margin-top:3px" id="outbd-top-label">Outboard Half — Full PFD</div>
+              </div>
+            </div>
+            <!-- Inboard half -->
+            <div id="outbd-bottom" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.5rem;gap:4px;min-height:80px">
+              <div id="outbd-bottom-content" style="width:100%;text-align:center">
+                <div style="background:rgba(0,60,0,0.4);border:1px solid rgba(0,200,0,0.3);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem">
+                  <div style="color:#0f0;font-weight:700">EI FORMAT</div>
+                  <div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0">
+                    <span>N1%</span><span>EGT</span><span>FF</span>
+                  </div>
+                </div>
+                <div style="font-size:0.58rem;color:var(--accent);margin-top:3px" id="outbd-bottom-label">Inboard Half — Engine Display</div>
+              </div>
+            </div>
           </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--muted);text-align:center;margin-top:4px" id="outbd-status-label">● ACTIVE</div>
         </div>
+
+        <!-- LEFT INBOARD DU -->
         <div>
-          <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT INBOARD DU</div>
-          <div class="du-box active-du" id="inbd-du" style="min-height:140px;flex-direction:column;gap:0.5rem">
-            <div id="inbd-pfd" style="width:100%;text-align:center;padding:0.3rem;border-bottom:1px solid rgba(0,255,157,0.2)">PFD (full)<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span></div>
-            <div id="inbd-nav" style="width:100%;text-align:center;padding:0.3rem">NAV DISPLAY<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span></div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:1px;margin-bottom:0.4rem">LEFT INBOARD DU (Captain's side)</div>
+          <div id="inbd-du" style="background:#000;border:2px solid rgba(0,255,157,0.5);border-radius:6px;min-height:180px;display:flex;flex-direction:column;overflow:hidden;transition:all 0.4s">
+            <!-- Top half -->
+            <div id="inbd-top" style="flex:1;border-bottom:2px dashed rgba(255,255,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.5rem;gap:4px;min-height:80px">
+              <div id="inbd-top-content" style="width:100%;text-align:center">
+                <div style="background:rgba(0,100,200,0.3);border:1px solid rgba(0,150,255,0.4);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem">
+                  <div style="color:#fff;font-weight:700">PFD</div>
+                  <div style="color:rgba(255,255,255,0.5);font-size:0.5rem">FULL</div>
+                  <div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0">
+                    <span>ALT</span><span>SPD</span><span>HDG</span>
+                  </div>
+                </div>
+                <div style="font-size:0.58rem;color:var(--accent3);margin-top:3px" id="inbd-top-label">Outboard Half — Full PFD</div>
+              </div>
+            </div>
+            <!-- Bottom half -->
+            <div id="inbd-bottom" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0.5rem;gap:4px;min-height:80px">
+              <div id="inbd-bottom-content" style="width:100%;text-align:center">
+                <div style="background:rgba(30,0,60,0.5);border:1px solid rgba(150,0,255,0.3);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem">
+                  <div style="color:#c080ff;font-weight:700">NAV DISPLAY</div>
+                  <div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#c080ff">
+                    <span>HDG</span><span>VOR</span><span>MAP</span>
+                  </div>
+                </div>
+                <div style="font-size:0.58rem;color:#c080ff;margin-top:3px" id="inbd-bottom-label">Inboard Half — Nav Display</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--muted);text-align:center;margin-top:4px" id="inbd-status-label">● ACTIVE</div>
+        </div>
+      </div>
+
+      <!-- Notes card -->
+      <div class="card">
+        <div class="info-label">Display Configuration Switch Notes</div>
+        <div class="two-col">
+          <div>
+            <div class="info-row"><div class="bullet"></div>When PFD/MFD switch moves to <strong>OUTBD</strong> or <strong>INBD</strong>, the PFD and mini-map display <strong>compress</strong> onto the selected DU position</div>
+            <div class="info-row"><div class="bullet orange"></div>The <strong>Auxiliary Outboard (AOB)</strong> display shows <strong>above the PFD</strong> when compressed</div>
+            <div class="info-row"><div class="bullet"></div>The system shows an <strong>MFD or EI display alongside</strong> the compressed PFD on the selected DU</div>
+          </div>
+          <div>
+            <div class="info-row"><div class="bullet"></div><strong>NORM</strong> — each DU shows its standard full display (PFD outboard, NAV/EI inboard)</div>
+            <div class="info-row"><div class="bullet orange"></div><strong>OUTBD</strong> — both displays compress onto the outboard DU; inboard DU goes blank</div>
+            <div class="info-row"><div class="bullet"></div><strong>INBD</strong> — both displays compress onto the inboard DU; outboard DU goes blank</div>
           </div>
         </div>
       </div>
@@ -2827,47 +2899,85 @@ function showInfo(key){
 // ── Slide 5: Mode switch
 function setMode(mode){
   ['norm','outbd','inbd'].forEach(m=>{
-    document.getElementById('mode-'+m).style.borderColor='';
-    document.getElementById('mode-'+m).style.color='';
+    const b = document.getElementById('mode-'+m);
+    if(b){ b.style.borderColor=''; b.style.color=''; }
   });
-  const outbdDU = document.getElementById('outbd-du');
-  const inbdDU = document.getElementById('inbd-du');
-  const desc = document.getElementById('mode-desc');
-  const outbdPFD = document.getElementById('outbd-pfd');
-  const outbdInner = document.getElementById('outbd-inner');
-  const inbdPFD = document.getElementById('inbd-pfd');
-  const inbdNav = document.getElementById('inbd-nav');
 
-  if(mode==='NORM'){
+  const outbdDU  = document.getElementById('outbd-du');
+  const inbdDU   = document.getElementById('inbd-du');
+  const desc     = document.getElementById('mode-desc');
+
+  const outbdTopContent = document.getElementById('outbd-top-content');
+  const outbdTopLbl     = document.getElementById('outbd-top-label');
+  const outbdBotContent = document.getElementById('outbd-bottom-content');
+  const outbdBotLbl     = document.getElementById('outbd-bottom-label');
+  const outbdStatusLbl  = document.getElementById('outbd-status-label');
+  const inbdTopContent  = document.getElementById('inbd-top-content');
+  const inbdTopLbl      = document.getElementById('inbd-top-label');
+  const inbdBotContent  = document.getElementById('inbd-bottom-content');
+  const inbdBotLbl      = document.getElementById('inbd-bottom-label');
+  const inbdStatusLbl   = document.getElementById('inbd-status-label');
+
+  const pfdFull = `<div style="background:rgba(0,100,200,0.3);border:1px solid rgba(0,150,255,0.4);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem"><div style="color:#fff;font-weight:700">PFD — FULL</div><div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0"><span>ALT</span><span>SPD</span><span>HDG</span><span>ATT</span></div></div>`;
+  const pfdComp = `<div style="background:rgba(0,80,160,0.4);border:1px solid rgba(0,150,255,0.5);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem"><div style="color:#fff;font-weight:700">PFD <span style="color:var(--warning);font-size:0.5rem">COMPRESSED</span></div><div style="background:rgba(255,190,11,0.12);border:1px solid rgba(255,190,11,0.4);border-radius:2px;padding:2px;margin-top:2px;font-size:0.5rem;color:var(--warning)">▲ AOB above PFD</div><div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0"><span>ALT</span><span>SPD</span><span>HDG</span></div></div>`;
+  const eiBlock = `<div style="background:rgba(0,60,0,0.4);border:1px solid rgba(0,200,0,0.3);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem"><div style="color:#0f0;font-weight:700">EI FORMAT</div><div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#0f0"><span>N1%</span><span>EGT</span><span>FF</span></div></div>`;
+  const mfdBlock = `<div style="background:rgba(0,50,0,0.5);border:1px solid rgba(0,200,100,0.3);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem"><div style="color:#0f0;font-weight:700">MFD / EI</div><div style="font-size:0.5rem;color:rgba(0,255,0,0.5)">shown with compressed PFD</div></div>`;
+  const navBlock = `<div style="background:rgba(30,0,60,0.5);border:1px solid rgba(150,0,255,0.3);border-radius:3px;padding:4px;font-family:'Share Tech Mono',monospace;font-size:0.58rem"><div style="color:#c080ff;font-weight:700">NAV DISPLAY</div><div style="display:flex;justify-content:space-around;margin-top:3px;font-size:0.5rem;color:#c080ff"><span>HDG</span><span>VOR</span><span>MAP</span></div></div>`;
+  const blankBlock = `<div style="background:rgba(0,0,0,0.9);border:1px solid rgba(255,255,255,0.06);border-radius:3px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:rgba(255,255,255,0.12);text-align:center">— BLANK —</div>`;
+
+  if(mode === 'NORM'){
     document.getElementById('mode-norm').style.borderColor='var(--accent3)';
     document.getElementById('mode-norm').style.color='var(--accent3)';
-    outbdDU.className='du-box active-du'; outbdDU.style.display='flex';
-    inbdDU.className='du-box active-du'; inbdDU.style.display='flex';
-    outbdPFD.innerHTML='OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">PFD (full)</span>';
-    outbdInner.innerHTML='INBOARD HALF<br><span style="font-size:0.65rem;color:var(--muted)">Engine Display</span>';
-    inbdPFD.innerHTML='PFD (full)<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span>';
-    inbdNav.innerHTML='NAV DISPLAY<br><span style="font-size:0.65rem;color:var(--muted)">Normal</span>';
-    desc.innerHTML='<strong style="color:var(--accent3)">NORM:</strong> Normal operation — both inboard and outboard DUs show their standard displays.';
-  } else if(mode==='OUTBOARD'){
+    if(outbdDU) outbdDU.style.borderColor='rgba(0,255,157,0.5)';
+    if(inbdDU)  inbdDU.style.borderColor='rgba(0,255,157,0.5)';
+    if(outbdTopContent) outbdTopContent.innerHTML = pfdFull;
+    if(outbdTopLbl)     outbdTopLbl.innerHTML = '<span style="color:var(--accent3)">Outboard Half — Full PFD</span>';
+    if(outbdBotContent) outbdBotContent.innerHTML = eiBlock;
+    if(outbdBotLbl)     outbdBotLbl.innerHTML = '<span style="color:var(--accent)">Inboard Half — Engine Indication (EI)</span>';
+    if(outbdStatusLbl)  outbdStatusLbl.innerHTML = '<span style="color:var(--accent3)">● ACTIVE</span>';
+    if(inbdTopContent)  inbdTopContent.innerHTML = pfdFull;
+    if(inbdTopLbl)      inbdTopLbl.innerHTML = '<span style="color:var(--accent3)">Outboard Half — Full PFD</span>';
+    if(inbdBotContent)  inbdBotContent.innerHTML = navBlock;
+    if(inbdBotLbl)      inbdBotLbl.innerHTML = '<span style="color:#c080ff">Inboard Half — NAV Display</span>';
+    if(inbdStatusLbl)   inbdStatusLbl.innerHTML = '<span style="color:var(--accent3)">● ACTIVE</span>';
+    if(desc) desc.innerHTML = '<strong style="color:var(--accent3)">NORM:</strong> Normal operation. <b>Left Outboard DU</b>: outboard half = full PFD, inboard half = Engine Indication. <b>Left Inboard DU</b>: outboard half = full PFD, inboard half = NAV display.';
+
+  } else if(mode === 'OUTBOARD'){
     document.getElementById('mode-outbd').style.borderColor='var(--accent)';
     document.getElementById('mode-outbd').style.color='var(--accent)';
-    outbdDU.className='du-box active-du'; outbdDU.style.display='flex';
-    inbdDU.className='du-box blank-du'; inbdDU.style.display='flex';
-    outbdPFD.innerHTML='OUTBOARD HALF<br><span style="font-size:0.65rem;color:var(--accent3)">Cropped PFD ◀</span>';
-    outbdInner.innerHTML='INBOARD HALF<br><span style="font-size:0.65rem;color:var(--accent)">Engine Display</span>';
-    inbdPFD.innerHTML='BLANK'; inbdNav.innerHTML='';
-    desc.innerHTML='<strong style="color:var(--accent)">OUTBOARD:</strong> Inboard DU goes blank. Outboard DU: outboard half shows cropped PFD; inboard half shows engine display format (or last shown format if engine display was not previously shown).';
+    if(outbdDU) outbdDU.style.borderColor='rgba(0,200,255,0.6)';
+    if(inbdDU)  inbdDU.style.borderColor='rgba(255,255,255,0.08)';
+    if(outbdTopContent) outbdTopContent.innerHTML = pfdComp;
+    if(outbdTopLbl)     outbdTopLbl.innerHTML = '<span style="color:var(--accent)">Outboard Half — Compressed PFD + AOB above</span>';
+    if(outbdBotContent) outbdBotContent.innerHTML = mfdBlock;
+    if(outbdBotLbl)     outbdBotLbl.innerHTML = '<span style="color:var(--accent)">Inboard Half — MFD or EI alongside compressed PFD</span>';
+    if(outbdStatusLbl)  outbdStatusLbl.innerHTML = '<span style="color:var(--accent)">● ACTIVE</span>';
+    if(inbdTopContent)  inbdTopContent.innerHTML = blankBlock;
+    if(inbdTopLbl)      inbdTopLbl.innerHTML = '<span style="color:rgba(255,255,255,0.2)">Blank</span>';
+    if(inbdBotContent)  inbdBotContent.innerHTML = '';
+    if(inbdBotLbl)      inbdBotLbl.innerHTML = '';
+    if(inbdStatusLbl)   inbdStatusLbl.innerHTML = '<span style="color:rgba(255,255,255,0.2)">● BLANK</span>';
+    if(desc) desc.innerHTML = '<strong style="color:var(--accent)">OUTBD:</strong> <b>Left Outboard DU</b>: PFD and mini-map compress onto this DU — outboard half shows compressed PFD with AOB above it; inboard half shows MFD/EI. <b>Left Inboard DU</b>: goes <em>blank</em>.';
+
   } else {
     document.getElementById('mode-inbd').style.borderColor='var(--accent2)';
     document.getElementById('mode-inbd').style.color='var(--accent2)';
-    outbdDU.className='du-box blank-du'; outbdDU.style.display='flex';
-    inbdDU.className='du-box active-du'; inbdDU.style.display='flex';
-    outbdPFD.innerHTML='BLANK'; outbdInner.innerHTML='';
-    inbdPFD.innerHTML='Cropped PFD<br><span style="font-size:0.65rem;color:var(--accent3)">← Cropped</span>';
-    inbdNav.innerHTML='Engine Display<br><span style="font-size:0.65rem;color:var(--accent)">or last format</span>';
-    desc.innerHTML='<strong style="color:var(--accent2)">INBOARD:</strong> Outboard DU goes blank. Inboard DU shows cropped PFD and the engine display format (or whatever was last shown in place of it).';
+    if(outbdDU) outbdDU.style.borderColor='rgba(255,255,255,0.08)';
+    if(inbdDU)  inbdDU.style.borderColor='rgba(255,107,53,0.6)';
+    if(outbdTopContent) outbdTopContent.innerHTML = blankBlock;
+    if(outbdTopLbl)     outbdTopLbl.innerHTML = '<span style="color:rgba(255,255,255,0.2)">Blank</span>';
+    if(outbdBotContent) outbdBotContent.innerHTML = '';
+    if(outbdBotLbl)     outbdBotLbl.innerHTML = '';
+    if(outbdStatusLbl)  outbdStatusLbl.innerHTML = '<span style="color:rgba(255,255,255,0.2)">● BLANK</span>';
+    if(inbdTopContent)  inbdTopContent.innerHTML = pfdComp;
+    if(inbdTopLbl)      inbdTopLbl.innerHTML = '<span style="color:var(--accent2)">Outboard Half — Compressed PFD + AOB above</span>';
+    if(inbdBotContent)  inbdBotContent.innerHTML = mfdBlock;
+    if(inbdBotLbl)      inbdBotLbl.innerHTML = '<span style="color:var(--accent2)">Inboard Half — MFD or EI alongside compressed PFD</span>';
+    if(inbdStatusLbl)   inbdStatusLbl.innerHTML = '<span style="color:var(--accent2)">● ACTIVE</span>';
+    if(desc) desc.innerHTML = '<strong style="color:var(--accent2)">INBD:</strong> <b>Left Outboard DU</b>: goes <em>blank</em>. <b>Left Inboard DU</b>: PFD and mini-map compress onto this DU — outboard half shows compressed PFD with AOB above it; inboard half shows MFD/EI.';
   }
 }
+
 
 // ── Slide 6: ENG toggle
 let engDecluttered = false;
